@@ -12,6 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 UserModel = get_user_model()
 
 class UserRegisterSerializer(serializers.Serializer):
+
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
@@ -27,7 +28,6 @@ class UserRegisterSerializer(serializers.Serializer):
     
     def create(self, validated_data):
         validated_data.pop('password2')
-        print(validated_data)
         user = UserModel.objects.create_user(**validated_data)
         user.is_active = False  # not active berfore activation
         user.save()
