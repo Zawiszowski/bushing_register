@@ -11,6 +11,17 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 UserModel = get_user_model()
 
+class UserResetPasswordConfirmerializer(serializers.Serializer):
+
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Passwords are not the same."})
+        return attrs
+    
 class UserRegisterSerializer(serializers.Serializer):
 
     email = serializers.EmailField()

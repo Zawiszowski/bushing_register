@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from .models import CustomUser
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_str
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
@@ -20,6 +20,59 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserLoginSerializer, UserSerializer, MyTokenObtainPairSerializer, UserRegisterSerializer
 
 UserModel = get_user_model()
+
+class UserResetPassword(APIView):
+    """
+    API endpoint for user rpassword reset.
+    Send to a password reset link to the user email.
+    """
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = UserModel.objects.get(email=email)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+
+            domain = get_current_site(request).domain
+            reset_link = f"http://{domain}{reverse('password-reset-confirm', kwargs={'uidb64': uid, 'token': token})}"
+
+            send_mail(
+                subject='Reset your password',
+                message=f'Click the link below to reset your password:\n\n{reset_link}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+        except UserModel.DoesNotExist:
+            pass  # not exposing whether the email exists
+
+        return Response({'message': 'If the email exists, a password reset link has been sent.'})
+    
+class UserResetPasswordConfirm(APIView):
+    """
+    Confirms the password, reset and sets newpassword
+    """
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = UserModel.objects.get(pk=uid)
+        except (UserModel.DoesNotExist, ValueError, TypeError, OverflowError):
+            return Response({'error': 'Invalid user ID.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not default_token_generator.check_token(user, token):
+            return Response({'error': 'Invalid or expired token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        password = request.data.get('password')
+        password2 = request.data.get('password2')
+
+        if password != password2:
+            return Response({'error': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(password)
+        user.save()
+
+        return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
+
 
 class UserRegister(APIView):
 
@@ -45,7 +98,7 @@ class UserRegister(APIView):
             # Send activation email
             send_mail(
                 subject='Activate your account',
-                message=f'Click the link to activate your account: {activation_link}',
+                message=f'Click the link to activate your account:\n\n {activation_link}',
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
                 fail_silently=False,
