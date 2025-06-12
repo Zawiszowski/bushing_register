@@ -109,6 +109,7 @@ class ResetPasswordTest(APITestCase):
             {"email": 'kkfkd@example.com'},
         ]
         data_items.append({"email": str(self.user.email)})
+
         for data in data_items:
             response_reset = self.client.post(self.password_reset_url, data)
             self.assertEqual(response_reset.status_code, status.HTTP_200_OK)
@@ -124,7 +125,62 @@ class ResetPasswordConfirmationTest(APITestCase):
     """
     Fails when user not ale to set new password
     """
-    pass
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='inactive@example.com',
+            password='Password123',
+            is_active=True
+        )
+        self.uid = urlsafe_base64_encode(force_bytes(self.user.pk))
+        self.token = default_token_generator.make_token(self.user)
+
+    def test_activation_with_valid_token(self):
+        """
+        Should accept new password.
+        """
+        url = reverse('password-reset-confirm', kwargs={
+            'uidb64': self.uid,
+            'token': self.token
+        })
+        data = {
+            'password': 'Password1234',
+            'password2': 'Password1234',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_activation_with_invalid_token(self):
+        """
+        Should fail changind password.
+        """
+        url = reverse('password-reset-confirm', kwargs={
+            'uidb64': self.uid,
+            'token': 'self.token'
+        })
+        data = {
+            'password': 'Password1234',
+            'password2': 'Password1234',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_activation_with_invalid_password(self):
+        """
+        Should fail changind password.
+        """
+        url = reverse('password-reset-confirm', kwargs={
+            'uidb64': self.uid,
+            'token': self.token
+        })
+        data = {
+            'password': 'Password1234',
+            'password2': 'PassworD1234',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
     # check activation link
     # check new password
+    # check token
 
