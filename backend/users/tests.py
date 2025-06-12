@@ -87,3 +87,44 @@ class ActivationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.user.refresh_from_db()
         self.assertFalse(self.user.is_active)
+
+class ResetPasswordTest(APITestCase):
+    """
+    Fails when user do noe receive mail with link
+    """
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='inactive@example.com',
+            password='Password123',
+            is_active=True
+        )
+        self.password_reset_url = reverse('password-reset')
+
+    def test_password_reset(self):
+        """
+        should fail if user not in db
+        """
+        data_items = [
+            {"email": 'asddas@example.com'},
+            {"email": 'kkfkd@example.com'},
+        ]
+        data_items.append({"email": str(self.user.email)})
+        for data in data_items:
+            response_reset = self.client.post(self.password_reset_url, data)
+            self.assertEqual(response_reset.status_code, status.HTTP_200_OK)
+
+
+
+        
+
+    # check mail with link
+    # check if return user - it should not ! 
+
+class ResetPasswordConfirmationTest(APITestCase):
+    """
+    Fails when user not ale to set new password
+    """
+    pass
+    # check activation link
+    # check new password
+
