@@ -12,7 +12,7 @@ export interface Config {
 }
 
 export interface Credentials {
-    username: string,
+    email: string,
     password: string
 }
 
@@ -22,6 +22,7 @@ export interface AuthContextType {
     authTokens: AuthTokens,
     loginUser: (e: Credentials) => void,
     logoutUser: () => void,
+
 }
 
 export interface AuthProviderType {
