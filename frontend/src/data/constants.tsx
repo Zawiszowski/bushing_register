@@ -5,8 +5,8 @@ let DRF_ADRESS = ''
 
 if (window.location.origin === "http://localhost:3000") {
     DRF_ADRESS = 'http://127.0.0.1:8001' 
-}else if(window.location.origin === "http://10.66.98.30:3000"){
-    DRF_ADRESS = 'http://10.66.98.30:8000'
+}else if(window.location.origin === "http://localhost:5173"){
+    DRF_ADRESS = 'http://127.0.0.1:8000'
 
 }else if(window.location.origin === "http://10.66.108.43:3000"){
     DRF_ADRESS = 'http://10.66.108.43:8000'

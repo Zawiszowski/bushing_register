@@ -32,15 +32,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
 
-    let [authTokens, setAuthTokens] = useState<AuthTokens>(()=>{ const tokens = localStorage.getItem('authTokensDFM'); return tokens ? JSON.parse(tokens) : defaultAuthTokens})
-    let [user, setUser] = useState<string>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? jwtDecode(JSON.parse(token).access) : ''})
-    let [loading, setLoading] = useState<boolean>(true)
-    let [config, setConfig] = useState<Config>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? {headers: {Authorization: `Bearer ${JSON.parse(token).access}`}}: defaultConfig})
+    const [authTokens, setAuthTokens] = useState<AuthTokens>(()=>{ const tokens = localStorage.getItem('authTokensDFM'); return tokens ? JSON.parse(tokens) : defaultAuthTokens})
+    const [user, setUser] = useState<string>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? jwtDecode(JSON.parse(token).access) : ''})
+    const [loading, setLoading] = useState<boolean>(true)
+    const [config, setConfig] = useState<Config>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? {headers: {Authorization: `Bearer ${JSON.parse(token).access}`}}: defaultConfig})
 
     const navigate = useNavigate()
 
 
     const loginUser = (credentials: Credentials)=> {
+        console.log(credentials)
 
 
         axios
@@ -136,7 +137,8 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
             user:user,
             authTokens:authTokens,
             loginUser:loginUser,
-            logoutUser:logoutUser,
+            logoutUser:logoutUser
+
         }} >
             {loading ? null : children}
             
