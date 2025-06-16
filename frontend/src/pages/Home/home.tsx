@@ -1,5 +1,4 @@
-import  { useState, useEffect } from 'react';
-import { GlobalStyle } from '../../styles/global.styles';
+
 import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, ButtonGroup, Button, StatCard, StatLabel, StatNumber,
     StatsGrid, StatsSection, SectionTitle, FeatureCard, FeatureDescription, FeatureIcon, FeatureTitle, FeaturesGrid, FeaturesSection,
     ProcessSection, ProcessStep, ProcessSteps, StepNumber, StepTitle, StepDescription, InfoCard, InfoGrid, InfoIcon, InfoList, InfoListItem,
@@ -13,7 +12,6 @@ import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle
 
 // Main Component
 const Home = () => {
-  const [activeFeature, setActiveFeature] = useState(0);
   
   const features = [
     {
@@ -55,17 +53,10 @@ const Home = () => {
     { number: '24/7', label: 'Support Available' }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveFeature((prev) => (prev + 1) % features.length);
-    }, 4000);
-    
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <>
-      <GlobalStyle />
+      
       <Container>
         <BackgroundElements>
           <FloatingShape duration="8s" delay="0s" />
