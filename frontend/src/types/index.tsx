@@ -22,6 +22,7 @@ export interface AuthContextType {
     authTokens: AuthTokens,
     loginUser: (e: Credentials) => void,
     logoutUser: () => void,
+    authError: string,
 
 }
 

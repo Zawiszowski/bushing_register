@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect, type HTMLAttributeAnchorTarget } from 'react';
 
 import { Eye, EyeOff, User, Mail, Lock, LogIn, UserPlus } from 'lucide-react';
 import { Container, BackgroundOverlay, BackgroundContainer, AnimatedCircle, FormWrapper, FormContainer, Header, IconWrapper, Title, Subtitle, FormContent, FieldGroup,
@@ -12,13 +12,14 @@ import { Container, BackgroundOverlay, BackgroundContainer, AnimatedCircle, Form
     password: string;
     name: string;
     confirmPassword: string;
+    errorCount: number;
 
  }
 
  
 
 const AuthComponent = () => {
-    const {loginUser, user, logoutUser} = useAuthContext()
+    const {loginUser, user, logoutUser, authError} = useAuthContext()
 
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -29,17 +30,23 @@ const AuthComponent = () => {
     password: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState<Error>({email: '', password: '', name:'', confirmPassword:''});
+  const [errors, setErrors] = useState<Error>({email: '', password: '', name:'', confirmPassword:'', errorCount: 0});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<MouseEvent>) => {
+useEffect(() =>{
+    setIsLoading(false)
+
+  },[authError])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    // Usuwaj błąd dla pola gdy użytkownik zaczyna pisać
-    if (errors[name]) {
+
+    // when user writes it removes errors
+    if (errors[name as keyof Error]) {
       setErrors(prev => ({
         ...prev,
         [name]: ''
@@ -48,7 +55,7 @@ const AuthComponent = () => {
   };
 
   const validateForm = () => {
-    const newErrors:Error = {email: '', password: '', name:'', confirmPassword:''};
+    const newErrors:Error = {email: '', password: '', name:'', confirmPassword:'', errorCount: 0};
 
     if (!isLogin && !formData.name.trim()) {
       newErrors.name = 'Imię jest wymagane';
@@ -72,19 +79,29 @@ const AuthComponent = () => {
       newErrors.confirmPassword = 'Hasła nie są identyczne';
     }
 
+    newErrors.errorCount = 0
+    Object.entries(newErrors).forEach( ([key, value]) => {
+
+        if (value !== '' && key !== 'errorCount'){
+            newErrors.errorCount += 1
+        }
+        
+    })
+
     return newErrors;
   };
 
   const handleSubmit = () => {
     // if (e) e.preventDefault();
-    console.log(formData)
-    setIsLoading(true);
-    loginUser({email: formData.email, password: formData.password})
+
     const newErrors = validateForm();
     
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+    setErrors(newErrors);
+
+    if ( newErrors.errorCount === 0){
+        setIsLoading(true);
+        loginUser({email: formData.email, password: formData.password})
+
     }
 
     
@@ -121,8 +138,7 @@ const AuthComponent = () => {
   };
 
   const toggleMode = () => {
-    console.log(formData)
-    // loginUser({email: formData.email, password: formData.password})
+
     setIsLogin(!isLogin);
     setFormData({
       name: '',
@@ -130,7 +146,7 @@ const AuthComponent = () => {
       password: '',
       confirmPassword: ''
     });
-    setErrors({email: '', password: '', name:'', confirmPassword:''});
+    setErrors({email: '', password: '', name:'', confirmPassword:'', errorCount: 0});
   };
 
   return (
@@ -203,7 +219,7 @@ const AuthComponent = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="wprowadz@email.com"
-                  hasError={!!errors.email}
+                  hasError={errors.email !== "" ? true:false}
                   hasRightIcon={false}
                 />
               </InputWrapper>
@@ -225,7 +241,7 @@ const AuthComponent = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Wprowadź hasło"
-                  hasError={!!errors.password}
+                  hasError={errors.password !== "" ? true:false}
                   hasRightIcon={true}
                 />
                 <IconRight
@@ -258,7 +274,7 @@ const AuthComponent = () => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     placeholder="Potwierdź hasło"
-                    hasError={!!errors.confirmPassword}
+                    hasError={errors.confirmPassword !== "" ? true:false}
                     hasRightIcon={true}
                   />
                   <IconRight
@@ -329,7 +345,7 @@ const AuthComponent = () => {
                     name="password"
                     value={user.email}
                     style={{border: 'none'}}
-                    hasError={!!errors.confirmPassword}
+                    hasError={errors.confirmPassword !== "" ? true:false}
                     hasRightIcon={true}
                     disabled={true}
                   />

@@ -135,7 +135,7 @@ export const Input = styled.input<{hasRightIcon: Boolean, hasError: Boolean}>`
   padding-right: ${({hasRightIcon}) => hasRightIcon ? '3rem' : '1rem'};
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(4px);
-  border: 1px solid ${({hasError}) => hasError ? '#ef4444' : 'rgba(20, 19, 19, 0.2)'};
+  border: 1px solid ${(props) => props.hasError ? '#ef4444' : 'rgba(20, 19, 19, 0.2)'};
   border-radius: 0.5rem;
   color: black;
   font-size: 1rem;
@@ -148,7 +148,7 @@ export const Input = styled.input<{hasRightIcon: Boolean, hasError: Boolean}>`
   &:focus {
     outline: none;
     ring: 2px;
-    ring-color: ${({hasError}) => hasError ? '#ef4444' : 'rgba(20, 19, 19, 0.2)'};
+    ring-color: ${(props) => props.hasError ? '#ef4444' : 'rgba(20, 19, 19, 0.2)'};
     // border-color: transparent;
   }
 `;

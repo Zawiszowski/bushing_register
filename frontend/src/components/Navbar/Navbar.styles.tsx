@@ -12,7 +12,7 @@ export const Logo = styled.img.attrs({
   height: 50px;
   margin: 15px;
   @media screen and (max-width: 768px) {
-    margin-left: 45px;
+    margin-left: 4rem;
   }
 
 `;
@@ -83,7 +83,7 @@ export const NavMenu = styled.div<{ isOpen: boolean }>`
   display: flex;
   align-items: center;
   @media screen and (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
     position: absolute;
     top: 90px;
     justify-content: center;
@@ -100,6 +100,7 @@ export const NavBtn = styled.nav`
   display: flex;
   align-items: center;
   margin-right: 24px;
+  
   /* Third Nav */
   /* justify-content: flex-end;
   width: 100vw; */
@@ -111,25 +112,25 @@ export const NavBtn = styled.nav`
 `;
   
 export const NavBtnLink = styled(NavLink)`
-  border-radius: 7px;
-  /* background: #989D9E;//#bfbfd5; */
-  padding: 5px 15px;
-  color:black;
+  border-radius: 20px;
+  background:rgb(153, 191, 199);
+  padding: 10px 15px;
+  color:white;
   outline: none;
-  border: 1px, solid black;
-  border-color: black;
+  border: 1px, solid rgb(153, 191, 199);;
+
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   text-decoration: none;
   /* Second Nav */
   margin-left: 24px;
   
+  
   &:hover {
     transition: all 0.2s ease-in-out;
     background:rgb(178, 210, 216);
-    border: 1px, solid gray;
-    border-color: gray;
-    color: black;
+    border: 1px, solid rgb(178, 210, 216);
+    color: white;
   }
 
 `;

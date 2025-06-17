@@ -35,13 +35,13 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
     const [authTokens, setAuthTokens] = useState<AuthTokens>(()=>{ const tokens = localStorage.getItem('authTokensDFM'); return tokens ? JSON.parse(tokens) : defaultAuthTokens})
     const [user, setUser] = useState<string>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? jwtDecode(JSON.parse(token).access) : ''})
     const [loading, setLoading] = useState<boolean>(true)
+    const [authError, setAuthError] = useState<string>('')
     const [config, setConfig] = useState<Config>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? {headers: {Authorization: `Bearer ${JSON.parse(token).access}`}}: defaultConfig})
 
     const navigate = useNavigate()
 
 
     const loginUser = (credentials: Credentials)=> {
-        console.log(credentials)
 
 
         axios
@@ -60,17 +60,18 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
                 localStorage.setItem('authTokensDFM', JSON.stringify(res.data))
                 navigate('/')
                 notify_success('Logged in')
+                console.log(jwtDecode(res.data.access))
             }
         })
 
         .catch(err => {
             console.log(err)
-            
+            setAuthError(err)
             notify_error('Bad credentials or no VPN connection')
             })
     }
 
-    let logoutUser = () => {
+    const logoutUser = () => {
         setAuthTokens(defaultAuthTokens)
         setUser('')
         setConfig(defaultConfig) 
@@ -78,7 +79,12 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
 
     }
 
-    let updateToken = async ()=> {
+    const registerUser = () => {
+
+        
+    }
+
+    const updateToken = async ()=> {
 
         axios.post(DRF_ADRESS + '/user_api/token/refresh/',
                 {
@@ -137,7 +143,8 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
             user:user,
             authTokens:authTokens,
             loginUser:loginUser,
-            logoutUser:logoutUser
+            logoutUser:logoutUser,
+            authError: authError,
 
         }} >
             {loading ? null : children}
