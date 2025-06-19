@@ -183,4 +183,5 @@ class ResetPasswordConfirmationTest(APITestCase):
     # check activation link
     # check new password
     # check token
+    #TODO check for user with the same email !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

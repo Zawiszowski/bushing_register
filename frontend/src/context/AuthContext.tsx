@@ -4,7 +4,7 @@ import {  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {DRF_ADRESS} from '../data/constants.tsx'
 import { notify_error, notify_success } from '../utils/basicToasts.js';
-import type { AuthTokens, Config, AuthContextType, AuthProviderType, Credentials } from '../types/index.tsx';
+import type { AuthTokens, Config, AuthContextType, AuthProviderType, Credentials, RegisterForm } from '../types/index.tsx';
 
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -36,6 +36,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
     const [user, setUser] = useState<string>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? jwtDecode(JSON.parse(token).access) : ''})
     const [loading, setLoading] = useState<boolean>(true)
     const [authError, setAuthError] = useState<string>('')
+    const [created, setCreated] = useState<boolean>(false)
     const [config, setConfig] = useState<Config>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? {headers: {Authorization: `Bearer ${JSON.parse(token).access}`}}: defaultConfig})
 
     const navigate = useNavigate()
@@ -79,9 +80,29 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
 
     }
 
-    const registerUser = () => {
+    const registerUser = (registerForm: RegisterForm) => {
 
-        
+        axios
+        .post(DRF_ADRESS + '/user_api/register/',
+            registerForm
+        )
+        .then(res =>{
+            if (res.status === 201){
+
+                console.log('created')
+                notify_success('created')
+                setCreated(!created)
+ 
+            }
+        })
+
+        .catch(err => {
+            console.log(err)
+            setAuthError(err)
+            notify_error('Bad credentials or no VPN connection')
+            })
+
+
     }
 
     const updateToken = async ()=> {
@@ -144,7 +165,9 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
             authTokens:authTokens,
             loginUser:loginUser,
             logoutUser:logoutUser,
+            registerUser: registerUser,
             authError: authError,
+            created: created,
 
         }} >
             {loading ? null : children}

@@ -19,11 +19,11 @@ import { Container, BackgroundOverlay, BackgroundContainer, AnimatedCircle, Form
  
 
 const AuthComponent = () => {
-    const {loginUser, user, logoutUser, authError} = useAuthContext()
+    const {loginUser, logoutUser, registerUser, user, authError, created} = useAuthContext()
 
-    const [isLogin, setIsLogin] = useState(true);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isLogin, setIsLogin] = useState<boolean>(true);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,12 +31,18 @@ const AuthComponent = () => {
     confirmPassword: ''
   });
   const [errors, setErrors] = useState<Error>({email: '', password: '', name:'', confirmPassword:'', errorCount: 0});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
 useEffect(() =>{
     setIsLoading(false)
 
   },[authError])
+
+  useEffect(() =>{
+    setIsLoading(false)
+    setIsLogin(true)
+
+  },[authError, created])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -99,8 +105,16 @@ useEffect(() =>{
     setErrors(newErrors);
 
     if ( newErrors.errorCount === 0){
-        setIsLoading(true);
-        loginUser({email: formData.email, password: formData.password})
+        if (isLogin){
+            setIsLoading(true);
+            loginUser({email: formData.email, password: formData.password})
+        }else{
+            setIsLoading(true)
+            registerUser({name: formData.name, email: formData.email, password: formData.password, password2: formData.confirmPassword})
+
+
+        }
+        
 
     }
 

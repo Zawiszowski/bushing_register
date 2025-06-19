@@ -16,13 +16,24 @@ export interface Credentials {
     password: string
 }
 
+export interface RegisterForm {
+    name: string,
+    // surname: string, ???????????????
+    email: string,
+    password: string,
+    password2: string,
+
+}
+
 export interface AuthContextType {
     config: Config,
     user: string,
     authTokens: AuthTokens,
     loginUser: (e: Credentials) => void,
     logoutUser: () => void,
+    registerUser: (e: RegisterForm) => void,
     authError: string,
+    created: boolean,
 
 }
 
