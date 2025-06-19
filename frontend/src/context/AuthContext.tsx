@@ -4,7 +4,7 @@ import {  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {DRF_ADRESS} from '../data/constants.tsx'
 import { notify_error, notify_success } from '../utils/basicToasts.js';
-import type { AuthTokens, Config, AuthContextType, AuthProviderType, Credentials, RegisterForm } from '../types/index.tsx';
+import type { AuthTokens, Config, AuthContextType, AuthProviderType, Credentials, RegisterForm, AuthError } from '../types/index.tsx';
 
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -16,6 +16,8 @@ const defaultAuthTokens: AuthTokens = {
     access: '',
     refresh: '',
   };
+
+
   
 
 const defaultConfig: Config = {
@@ -35,7 +37,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
     const [authTokens, setAuthTokens] = useState<AuthTokens>(()=>{ const tokens = localStorage.getItem('authTokensDFM'); return tokens ? JSON.parse(tokens) : defaultAuthTokens})
     const [user, setUser] = useState<string>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? jwtDecode(JSON.parse(token).access) : ''})
     const [loading, setLoading] = useState<boolean>(true)
-    const [authError, setAuthError] = useState<string>('')
+    const [authError, setAuthError] = useState<AuthError>({error: '', detail: []})
     const [created, setCreated] = useState<boolean>(false)
     const [config, setConfig] = useState<Config>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? {headers: {Authorization: `Bearer ${JSON.parse(token).access}`}}: defaultConfig})
 
@@ -66,8 +68,9 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
         })
 
         .catch(err => {
+            
             console.log(err)
-            setAuthError(err)
+            setAuthError({error:err, detail: err.response.data})
             notify_error('Bad credentials or no VPN connection')
             })
     }
@@ -81,7 +84,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
     }
 
     const registerUser = (registerForm: RegisterForm) => {
-
+        
         axios
         .post(DRF_ADRESS + '/user_api/register/',
             registerForm
@@ -97,8 +100,9 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
         })
 
         .catch(err => {
+            
             console.log(err)
-            setAuthError(err)
+            setAuthError({error:err, detail: err.response.data})
             notify_error('Bad credentials or no VPN connection')
             })
 
@@ -139,6 +143,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
         if(loading){
             setLoading(false)
             updateToken()
+            setAuthError({error:'', detail: []})
 
         }else{
    
@@ -166,6 +171,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
             loginUser:loginUser,
             logoutUser:logoutUser,
             registerUser: registerUser,
+            setAuthError: setAuthError,
             authError: authError,
             created: created,
 

@@ -35,6 +35,13 @@ class UserRegisterSerializer(serializers.Serializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Passwords are not the same."})
+
+        try: 
+            user = UserModel.objects.all().get(email=attrs['email'])
+            raise serializers.ValidationError({"credentials": "Unable to create account with these credentials."})
+        except UserModel.DoesNotExist:
+            pass
+
         return attrs
     
     def create(self, validated_data):
@@ -43,6 +50,7 @@ class UserRegisterSerializer(serializers.Serializer):
         user.is_active = False  # not active berfore activation
         user.save()
         return user
+
 
 class UserLoginSerializer(serializers.Serializer):
 

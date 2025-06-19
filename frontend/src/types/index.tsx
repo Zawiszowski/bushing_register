@@ -16,6 +16,11 @@ export interface Credentials {
     password: string
 }
 
+export interface AuthError {
+    error: string,
+    detail: Array<string>,
+}
+
 export interface RegisterForm {
     name: string,
     // surname: string, ???????????????
@@ -32,7 +37,8 @@ export interface AuthContextType {
     loginUser: (e: Credentials) => void,
     logoutUser: () => void,
     registerUser: (e: RegisterForm) => void,
-    authError: string,
+    setAuthError: (e: AuthError) => void,
+    authError: AuthError,
     created: boolean,
 
 }

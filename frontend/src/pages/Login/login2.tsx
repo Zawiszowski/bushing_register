@@ -19,7 +19,7 @@ import { Container, BackgroundOverlay, BackgroundContainer, AnimatedCircle, Form
  
 
 const AuthComponent = () => {
-    const {loginUser, logoutUser, registerUser, user, authError, created} = useAuthContext()
+    const {loginUser, logoutUser, registerUser, setAuthError, user, authError, created} = useAuthContext()
 
     const [isLogin, setIsLogin] = useState<boolean>(true);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -35,14 +35,14 @@ const AuthComponent = () => {
 
 useEffect(() =>{
     setIsLoading(false)
-
+    
   },[authError])
 
   useEffect(() =>{
     setIsLoading(false)
     setIsLogin(true)
 
-  },[authError, created])
+  },[created])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -323,6 +323,15 @@ useEffect(() =>{
                 isLogin ? 'Zaloguj się' : 'Zarejestruj się'
               )}
             </SubmitButton>
+            {authError && (
+                <>
+                {Object.entries(authError.detail).map( ([key, value]) => (
+                    <ErrorMessage>{value}</ErrorMessage>
+                ))
+                
+                }
+                </>
+            )}
           </FormContent>
 
           {/* Zapomniałeś hasła - tylko przy logowaniu */}
@@ -343,6 +352,7 @@ useEffect(() =>{
                 onClick={toggleMode}
               >
                 {isLogin ? 'Zarejestruj się' : 'Zaloguj się'}
+
               </ToggleButton>
             </ToggleText>
           </ToggleSection>
