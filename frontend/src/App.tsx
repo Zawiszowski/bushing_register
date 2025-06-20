@@ -5,7 +5,6 @@ import Navbar from './components/Navbar/navbar';
 import { BrowserRouter as Router, Routes, Route,} from 'react-router-dom';
 import Footer from './components/Footer/footer';
 import  { AuthProvider,  } from './context/AuthContext';
-import Login from './pages/Login/login';
 import { GlobalStyle } from './styles/global.styles';
 import AuthComponent from './pages/Login/login2';
 

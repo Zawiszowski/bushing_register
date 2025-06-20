@@ -3,7 +3,7 @@ import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle
     StatsGrid, StatsSection, SectionTitle, FeatureCard, FeatureDescription, FeatureIcon, FeatureTitle, FeaturesGrid, FeaturesSection,
     ProcessSection, ProcessStep, ProcessSteps, StepNumber, StepTitle, StepDescription, InfoCard, InfoGrid, InfoIcon, InfoList, InfoListItem,
     InfoSection, InfoText, InfoTitle
- } from './components';
+ } from './home.styles';
 
 
 

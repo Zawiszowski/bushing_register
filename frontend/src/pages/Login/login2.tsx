@@ -1,7 +1,7 @@
-import React, { useState,useEffect, type HTMLAttributeAnchorTarget } from 'react';
+import React, { useState,useEffect } from 'react';
 
-import { Eye, EyeOff, User, Mail, Lock, LogIn, UserPlus } from 'lucide-react';
-import { Container, BackgroundOverlay, BackgroundContainer, AnimatedCircle, FormWrapper, FormContainer, Header, IconWrapper, Title, Subtitle, FormContent, FieldGroup,
+import { Eye, EyeOff, User, Mail, Lock, LogIn, UserPlus, LogOut } from 'lucide-react';
+import { Container, FormWrapper, FormContainer, Header, IconWrapper, Title, Subtitle, FormContent, FieldGroup,
     Label, InputWrapper, IconLeft, IconRight, Input, ErrorMessage, SubmitButton, LoadingWrapper, Spinner, ForgotPassword, ForgotPasswordLink,
     ToggleButton, ToggleSection, ToggleText
  } from './login2.styles';
@@ -11,26 +11,32 @@ import { Container, BackgroundOverlay, BackgroundContainer, AnimatedCircle, Form
     email: string;
     password: string;
     name: string;
+    surename: string,
     confirmPassword: string;
     errorCount: number;
 
  }
 
+ const defaultFormData = {
+     name: '',
+    surename: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  }
+  const defaultError = {email: '', password: '', name:'', surename: '', confirmPassword:'', errorCount: 0}
+
+
  
 
 const AuthComponent = () => {
-    const {loginUser, logoutUser, registerUser, setAuthError, user, authError, created} = useAuthContext()
+    const {loginUser, logoutUser, registerUser, user, authError, created} = useAuthContext()
 
     const [isLogin, setIsLogin] = useState<boolean>(true);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-    const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [errors, setErrors] = useState<Error>({email: '', password: '', name:'', confirmPassword:'', errorCount: 0});
+    const [formData, setFormData] = useState(defaultFormData);
+  const [errors, setErrors] = useState<Error>(defaultError);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
 useEffect(() =>{
@@ -61,10 +67,14 @@ useEffect(() =>{
   };
 
   const validateForm = () => {
-    const newErrors:Error = {email: '', password: '', name:'', confirmPassword:'', errorCount: 0};
+    const newErrors:Error = defaultError;
 
     if (!isLogin && !formData.name.trim()) {
       newErrors.name = 'Imię jest wymagane';
+    }
+
+    if (!isLogin && !formData.surename.trim()) {
+      newErrors.surename = 'Nazwisko jest wymagane';
     }
 
     if (!formData.email.trim()) {
@@ -110,7 +120,7 @@ useEffect(() =>{
             loginUser({email: formData.email, password: formData.password})
         }else{
             setIsLoading(true)
-            registerUser({name: formData.name, email: formData.email, password: formData.password, password2: formData.confirmPassword})
+            registerUser({first_name: formData.name, last_name: formData.surename, email: formData.email, password: formData.password, password2: formData.confirmPassword})
 
 
         }
@@ -154,13 +164,8 @@ useEffect(() =>{
   const toggleMode = () => {
 
     setIsLogin(!isLogin);
-    setFormData({
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    });
-    setErrors({email: '', password: '', name:'', confirmPassword:'', errorCount: 0});
+    setFormData(defaultFormData);
+    setErrors(defaultError);
   };
 
   return (
@@ -175,6 +180,8 @@ useEffect(() =>{
 
       <FormWrapper>
         <FormContainer>
+        {!user.email ? 
+        (<>
           <Header>
             <IconWrapper>
               {isLogin ? (
@@ -183,6 +190,7 @@ useEffect(() =>{
                 <UserPlus size={32} color="white" />
               )}
             </IconWrapper>
+            
             <Title>
               {isLogin ? 'Zaloguj się' : 'Zarejestruj się'}
             </Title>
@@ -193,8 +201,7 @@ useEffect(() =>{
               }
             </Subtitle>
           </Header>
-        {!user ? 
-        (<>
+
           <FormContent>
             {/* Imię - tylko przy rejestracji */}
             {!isLogin && (
@@ -216,6 +223,29 @@ useEffect(() =>{
                 </InputWrapper>
                 {errors.name && (
                   <ErrorMessage>{errors.name}</ErrorMessage>
+                )}
+              </FieldGroup>
+            )}
+            {/* nazwisko - tylko przy rejestracji */}
+            {!isLogin && (
+              <FieldGroup>
+                <Label>Nazwisko</Label>
+                <InputWrapper>
+                  <IconLeft>
+                    <User size={20} />
+                  </IconLeft>
+                  <Input
+                    type="text"
+                    name="name"
+                    value={formData.surename}
+                    onChange={handleInputChange}
+                    placeholder="Wprowadź swoje nazwisko"
+                    hasError={!!errors.surename}
+                    hasRightIcon={false}
+                  />
+                </InputWrapper>
+                {errors.surename && (
+                  <ErrorMessage>{errors.surename}</ErrorMessage>
                 )}
               </FieldGroup>
             )}
@@ -325,7 +355,7 @@ useEffect(() =>{
             </SubmitButton>
             {authError && (
                 <>
-                {Object.entries(authError.detail).map( ([key, value]) => (
+                {Object.entries(authError.detail).map( ([_, value]) => (
                     <ErrorMessage>{value}</ErrorMessage>
                 ))
                 
@@ -358,6 +388,19 @@ useEffect(() =>{
           </ToggleSection>
           </>):
           (<>
+            <Header>
+            <IconWrapper>
+                <LogOut size={32} color="white" />
+
+            </IconWrapper>
+            
+            <Title>
+              Wyloguj się
+            </Title>
+            <Subtitle>
+              'Witaj ponownie! Wprowadź swoje dane.' 
+            </Subtitle>
+          </Header>
           <FormContent>
             <FieldGroup>
               <Label>Email</Label>

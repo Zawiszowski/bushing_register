@@ -25,31 +25,31 @@ toast.error(`error ${error}`, {
     theme: "light",
     })}
 
-export const notify_promise = (promiseContainer:Promise<void>, successMessage:string, errorMessage:string) => {
-    toast.promise(
-        promiseContainer,
-        {
-            pending: {
-                render() {
-                  return "Promise pending...";
-                },
-                theme: "light",
-              },
-              success: {
-                render() {
-                  return `Success! ${successMessage}`;
-                },
-                // icon: "🟢",
-              },
-              error: {
-                render({ data }) {
-                  return `Error: ${data?.response?.data?.detail || errorMessage}`;
-                },
-                theme: "light",
-              },
-        }
-    )
-}
+// export const notify_promise = (promiseContainer:Promise<void>, successMessage:string, errorMessage:string) => {
+//     toast.promise(
+//         promiseContainer,
+//         {
+//             pending: {
+//                 render() {
+//                   return "Promise pending...";
+//                 },
+//                 theme: "light",
+//               },
+//               success: {
+//                 render() {
+//                   return `Success! ${successMessage}`;
+//                 },
+//                 // icon: "🟢",
+//               },
+//               error: {
+//                 render({ data }) {
+//                   return `Error: ${data?.response?.data?.detail || errorMessage}`;
+//                 },
+//                 theme: "light",
+//               },
+//         }
+//     )
+// }
 
 export const notify_loading = (promiseContainer:Promise<void>, successMessage:string) => {
   toast.promise(

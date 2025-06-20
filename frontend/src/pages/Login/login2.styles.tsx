@@ -142,7 +142,7 @@ export const Input = styled.input<{hasRightIcon: Boolean, hasError: Boolean}>`
   transition: all 0.2s ease;
   
   &::placeholder {
-    color:rgb(0, 0, 0);
+    color:rgb(124, 124, 124);
   }
   
   &:focus {

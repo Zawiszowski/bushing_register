@@ -22,17 +22,29 @@ export interface AuthError {
 }
 
 export interface RegisterForm {
-    name: string,
-    // surname: string, ???????????????
+    first_name: string,
+    last_name: string, 
     email: string,
     password: string,
     password2: string,
 
 }
+export interface UserType {
+
+    token_type: string,
+    exp: number,
+    iat: number,
+    jti: string,
+    user_id: number,
+    email: string,
+    groups: Array<string>,
+    permissions: Array<string>,
+
+}
 
 export interface AuthContextType {
     config: Config,
-    user: string,
+    user: UserType,
     authTokens: AuthTokens,
     loginUser: (e: Credentials) => void,
     logoutUser: () => void,

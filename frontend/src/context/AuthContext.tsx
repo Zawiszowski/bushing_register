@@ -4,7 +4,7 @@ import {  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {DRF_ADRESS} from '../data/constants.tsx'
 import { notify_error, notify_success } from '../utils/basicToasts.js';
-import type { AuthTokens, Config, AuthContextType, AuthProviderType, Credentials, RegisterForm, AuthError } from '../types/index.tsx';
+import type { AuthTokens, Config, AuthContextType, AuthProviderType, Credentials, RegisterForm, AuthError, UserType } from '../types/index.tsx';
 
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -25,6 +25,19 @@ const defaultConfig: Config = {
         Authorization: '',
     },
 }
+
+const defaultUser: UserType = {
+
+    token_type: '',
+    exp: -1,
+    iat: -1,
+    jti: '',
+    user_id: -1,
+    email: '',
+    groups: [],
+    permissions: [],
+
+}
   
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -35,7 +48,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
 
     const [authTokens, setAuthTokens] = useState<AuthTokens>(()=>{ const tokens = localStorage.getItem('authTokensDFM'); return tokens ? JSON.parse(tokens) : defaultAuthTokens})
-    const [user, setUser] = useState<string>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? jwtDecode(JSON.parse(token).access) : ''})
+    const [user, setUser] = useState<UserType>(()=> {const token = localStorage.getItem('authTokensDFM'); return token ? jwtDecode(JSON.parse(token).access) : defaultUser})
     const [loading, setLoading] = useState<boolean>(true)
     const [authError, setAuthError] = useState<AuthError>({error: '', detail: []})
     const [created, setCreated] = useState<boolean>(false)
@@ -77,7 +90,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
 
     const logoutUser = () => {
         setAuthTokens(defaultAuthTokens)
-        setUser('')
+        setUser(defaultUser)
         setConfig(defaultConfig) 
         localStorage.removeItem('authTokensDFM')
 

@@ -2,7 +2,6 @@ import React, { useState} from 'react';
 
 
 import {
-    // Logo,
     LoginButton,
 }
 from './login.styles.js'
@@ -10,7 +9,7 @@ from './login.styles.js'
 
 
 import axios from "axios"
-import { Container, Card, Row, Col, Title, SectionTitle} from '../../styles/Generic.styles.js';
+import { Container, Card, Row, Col} from '../../styles/Generic.styles.js';
 
 import { useAuthContext } from '../../context/AuthContext.js';
 
