@@ -11,6 +11,7 @@ import {
     MobileIcon,
 
 }
+
 from './Navbar.styles';
 import { FaBars } from 'react-icons/fa';
 import { useAuthContext } from "../../context/AuthContext";
@@ -29,7 +30,7 @@ const Navbar = () => {
   let button
 
 
-  if (user){
+  if (user.email !== ""){
     button = <NavBtnLink to='/login'>Profile</NavBtnLink>
   }else{
     button = <NavBtnLink to='/login'>Login</NavBtnLink>

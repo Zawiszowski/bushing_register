@@ -52,19 +52,20 @@ class ProjectModel(models.Model):
     def __str__(self):
         return f'{self.client.name} - {self.name}'
 
-class MountingComponent(models.Model):
-    class Axle_fields(models.TextChoices):
-        REAR = 'Rear'
-        FRONT = 'Front'
+class MountingComponentModel(models.Model):
+
 
     name = models.CharField(unique=True, max_length=25)
-    axle = models.CharField(max_length=5, choices=Axle_fields.choices, default=Axle_fields.FRONT)
+    
 
     def __str__(self):
         return self.name
     
 
 class BushingRegister(TimeStampMixin):
+    class Axle_fields(models.TextChoices):
+        REAR = 'Rear'
+        FRONT = 'Front'
 
     project = models.ForeignKey(ProjectModel, on_delete=models.SET_NULL, blank=True, null=True, related_name='project')
 
@@ -72,12 +73,13 @@ class BushingRegister(TimeStampMixin):
     client_pn = models.CharField(max_length=500, blank=True, null=True)
     decommissioned = models.BooleanField(default=False)
     storage_locker=models.CharField(max_length=100)
+    axle = models.CharField(max_length=5, choices=Axle_fields.choices, default=Axle_fields.FRONT)
 
     #static stiffnes
     velocity = models.FloatField(default=0.53, max_length=10)
     stiffness_x = models.JSONField(default=get_default_x_list, validators=[validate_stiffness]) 
     stiffness_y = models.JSONField(default=get_default_y_list, validators=[validate_stiffness]) 
-    mounting_component = models.ForeignKey(MountingComponent, on_delete=models.SET_NULL, blank=True, null=True, related_name='mounting_component')
+    mounting_component = models.ForeignKey(MountingComponentModel, on_delete=models.SET_NULL, blank=True, null=True, related_name='mounting_component')
 
     comment = models.CharField(max_length=500, blank=True, null=True)
 
