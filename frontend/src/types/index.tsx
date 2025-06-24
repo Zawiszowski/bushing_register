@@ -1,4 +1,5 @@
 import { type ReactNode } from "react"
+import type { IconType } from "react-icons"
 
 export interface AuthTokens {
     access: string,
@@ -57,4 +58,20 @@ export interface AuthContextType {
 
 export interface AuthProviderType {
     children: ReactNode;
+}
+
+export interface SocialLinkData {
+  href: string;
+  icon: IconType;
+  label: string;
+}
+
+export interface ProductLink {
+  href: string;
+  text: string;
+}
+
+export interface UsefulLink {
+  href: string;
+  text: string;
 }
