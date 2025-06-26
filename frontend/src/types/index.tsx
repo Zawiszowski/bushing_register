@@ -75,3 +75,45 @@ export interface UsefulLink {
   href: string;
   text: string;
 }
+
+export interface ClientType {
+    id: number, 
+    name: string,
+}
+
+export interface ProjectType {
+    id: number,
+    name: string,
+    client: number,
+}
+
+
+export interface RegisterType {
+    id: number,
+    custom_pn: string,
+    client_pn: string
+    decommissioned: boolean,
+    storage_locker: string,
+    velocity: string,
+    axle: string,
+    stiffness_x:  Array<number>,
+    stiffness_y: Array<number>,//[1200,1000,850,800,820,850,800,780,800,850,1100],
+    post_date: string,
+    photo_links: Array<{file: string}>,
+    project: ProjectType, //{id: null, name: null, client: null},,
+    project_id: number,
+    created_at: string,
+    updated_at: string,
+}
+
+export interface ValidateRegister {
+    client: boolean,
+    project_id: boolean,
+    axle: boolean,
+    custom_pn: boolean,
+    client_pn: boolean,
+    storage_locker: boolean,
+    photos: boolean,
+    custom_pn_msg: string,
+    photos_msg: string
+}

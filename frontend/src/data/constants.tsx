@@ -20,8 +20,15 @@ if (window.location.origin === "http://localhost:3000") {
 
 }
 
+const PERMISSIONS = {
+    CAN_CHANGE_TM: 'Can change register',
+    CAN_ADD_TM: 'Can add register',
+    CAN_DELETE_TM: 'Can delete register',
 
-export { DRF_ADRESS}
+}
+
+
+export { DRF_ADRESS, PERMISSIONS}
 
 
 

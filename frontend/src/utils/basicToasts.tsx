@@ -51,6 +51,19 @@ toast.error(`error ${error}`, {
 //     )
 // }
 
+export const validation_info_error = (err : any) => {
+  try{
+    let obj = JSON.parse(err?.request?.response)
+    const text = Object.entries(obj)
+      .map(([key, value]) => `${key.replace('_', ' ')}: ${value}`)
+      .join('\n');
+    notify_error('\n' + text)
+  }catch (error){
+
+    notify_error('Something went wrong')
+  }
+}
+
 export const notify_loading = (promiseContainer:Promise<void>, successMessage:string) => {
   toast.promise(
       promiseContainer,

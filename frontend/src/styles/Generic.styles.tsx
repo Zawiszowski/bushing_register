@@ -99,3 +99,25 @@ export const Row = styled.div`
 export const Col = styled.div`
   display: col;
 `;
+
+export const Context = styled.main`
+
+  background-color:rgb(194, 194, 194);
+  background-image: white; 
+  padding: 3px;
+  min-height: 100vh;
+
+`;
+
+export const AddBtn = styled(Button)`
+  color:rgb(37, 235, 113);
+`
+
+export const EditBtn = styled(Button)`
+  color:rgb(235, 222, 37);
+`
+
+export const DeleteBtn = styled(Button)`
+  color:rgb(235, 67, 37);
+
+`
