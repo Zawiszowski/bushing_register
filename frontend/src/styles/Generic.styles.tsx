@@ -102,7 +102,7 @@ export const Col = styled.div`
 
 export const Context = styled.main`
 
-  background-color:rgb(194, 194, 194);
+  background-color:white;
   background-image: white; 
   padding: 3px;
   min-height: 100vh;
@@ -110,14 +110,23 @@ export const Context = styled.main`
 `;
 
 export const AddBtn = styled(Button)`
-  color:rgb(37, 235, 113);
+padding: 0.5rem 2rem;
+border-radius: 10px;
+color: black;
+  background:rgb(202, 235, 214);
 `
 
 export const EditBtn = styled(Button)`
-  color:rgb(235, 222, 37);
+  padding: 0.5rem 2rem;
+  border-radius: 10px;
+  color: black;
+  background:rgb(236, 234, 199);
 `
 
 export const DeleteBtn = styled(Button)`
-  color:rgb(235, 67, 37);
+padding: 0.5rem 2rem;
+border-radius: 10px;
+color: black;
+  background:rgb(226, 155, 143);
 
 `

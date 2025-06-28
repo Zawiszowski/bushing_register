@@ -1,7 +1,7 @@
 import { useState, useEffect} from 'react';
 import Papa from "papaparse"
 
-import {DatePicker} from "reactstrap-date-picker";
+
 import { useProject } from '../../hooks/useProject';
 import LineChart from '../Chart/LineChart';
 import{
@@ -15,7 +15,7 @@ import{
     Input,
     Label,
     Tooltip,
-    FormFeedback
+    FormFeedback,
     
 
 } from 'reactstrap';
@@ -46,7 +46,7 @@ const CustomModal = (props : Props) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
     const client_name_init = 'new client to add'
-    const client_id_init = JSON.parse(JSON.stringify(activeItem.project ? clients.find(item => item.id === (activeItem.project?.client)).id : clients.find(item => item.name === client_name_init).id ))
+    const client_id_init = JSON.parse(JSON.stringify(activeItem.project ? clients.find(item => item.id === (activeItem.project?.client))?.id : clients.find(item => item.name === client_name_init)?.id ))
 
 
     const [clientId, setClientId] = useState(client_id_init) // tutaj dodać warunek na newclient to add
@@ -150,6 +150,7 @@ const CustomModal = (props : Props) => {
     };
 
     const photoGalleryBtn = () => {
+        debugger
         if(state.photo_links.length > 0){
             
             return(
@@ -176,7 +177,7 @@ const CustomModal = (props : Props) => {
             return(
             <FormGroup>
             <Label for="post_date">Created at date</Label>
-            <DatePicker
+            <Input
                 type='date'
                 name="post_date"
                 value={state.created_at}
@@ -217,8 +218,8 @@ const CustomModal = (props : Props) => {
         {
             const year = new Date().getFullYear()
             const axle_str = state.axle === 'Rear' ? 'RR' : 'FR'
-            const Custom_id_auto_name = clients.find(item => item.id === clientId).name.substring(0, 3) + ' ' + String(year).substring(2, 4) + " " + projects.find(proj_item => proj_item.id === parseInt(state.project_id)).name.replaceAll(' ','_') + '-' + axle_str + '-' + '01'
-            setState({...state, custom_pn: Custom_id_auto_name, project: {...projects.find(proj_item => proj_item.id === parseInt(state.project_id))}});
+            const Custom_id_auto_name = clients.find(item => item.id === clientId)?.name.substring(0, 3) + ' ' + String(year).substring(2, 4) + " " + projects.find(proj_item => proj_item.id === Number(state.project_id))?.name?.replaceAll(' ','_') + '-' + axle_str + '-' + '01'
+            setState({...state, custom_pn: Custom_id_auto_name, project: {...projects.find(proj_item => proj_item.id === Number(state.project_id)) ?? {id: -1, name: '', client: -1}}});
 
         }
 
@@ -353,7 +354,7 @@ const CustomModal = (props : Props) => {
                         </FormGroup>
 
                         <FormGroup>
-                        <Label for="storage_locker">Box Name</Label>
+                        <Label for="storage_locker">Storage Locker Name</Label>
                         <Input
                             valid={!readOnly && validate.storage_locker}
                             invalid={!readOnly && !validate.storage_locker}

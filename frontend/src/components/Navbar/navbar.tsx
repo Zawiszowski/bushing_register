@@ -53,9 +53,11 @@ const Navbar = () => {
 
               <NavigationLink to='/'>Home</NavigationLink>
               
-              <NavigationLink  to='/help' >Projects</NavigationLink>
+              <NavigationLink  to='/register' >Register</NavigationLink>
 
-              <NavigationLink  to='/projects' >Contact</NavigationLink>
+              <NavigationLink  to='/calculator' >Stiffnes calculator</NavigationLink>
+
+            
 
             </NavMenu>
             

@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
 
     const navigate = useNavigate()
 
-
+    console.log(user)
     const loginUser = (credentials: Credentials)=> {
 
 

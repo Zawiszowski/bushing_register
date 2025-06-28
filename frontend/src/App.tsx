@@ -8,7 +8,8 @@ import  { AuthProvider,  } from './context/AuthContext';
 import { GlobalStyle } from './styles/global.styles';
 import AuthComponent from './pages/Login/login2';
 import BushingRegister from './pages/Register/register';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import StiffnesCalculator from './pages/StiffnessCalculator/stiffnesCalculator';
 
 function App(){
 
@@ -26,6 +27,7 @@ function App(){
               
               <Route path='/' element={<Home></Home>}></Route>
               <Route path='/register' element={<BushingRegister></BushingRegister>}></Route>
+              <Route path='/calculator' element={<StiffnesCalculator></StiffnesCalculator>}></Route>
               <Route path='/login' element={<AuthComponent></AuthComponent>}></Route>
 
             </Routes>

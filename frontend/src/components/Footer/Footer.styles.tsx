@@ -110,7 +110,7 @@ export const SectionTitle = styled.h6`
 
 export const Logo = styled.img`
   width: 96px;
-  height: 32px;
+  height: 50px;
   margin: 0.5rem;
 `;
 
