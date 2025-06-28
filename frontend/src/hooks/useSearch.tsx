@@ -28,12 +28,17 @@ export const useSearch = (query : string, pageNumber :number, config :object, re
           setList(prevItems => 
           {
             let newData  = data.results.map((item : any) => {
-              item.photo_links = JSON.parse(JSON.stringify(item.photos))
+              item.photo_links = JSON.parse(JSON.stringify(item.photos)) ?? []
               item.photos = null
               return item
             })
+            const combined = [...prevItems, ...newData]
 
-            return [... new Set([...prevItems, ...newData])]
+            const unique = combined.filter( (item, index, self) => (
+              index === self.findIndex((secondItem) => secondItem.id ===item.id)
+            ))
+
+            return [... new Set([...unique])]
           } )
           setHasMore(response.data.next ? true : false)
 

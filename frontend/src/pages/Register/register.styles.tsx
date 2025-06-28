@@ -1,23 +1,5 @@
 import styled from 'styled-components'
-
-// export const Button = styled(NavLink)`
-//   border-radius: 4px;
-//   background: #bfbfd5;
-//   padding: 10px 22px;
-//   color: #000000;
-//   outline: none;
-//   border: none;
-//   cursor: pointer;
-//   transition: all 0.2s ease-in-out;
-//   text-decoration: none;
-//   /* Second Nav */
-//   margin-left: 24px;
-//   &:hover {
-//     transition: all 0.2s ease-in-out;
-//     background: #ffffff;
-//     color: #000000;
-//   }
-// `;
+import { fadeInUp } from '../../styles/animation';
 
 
 export const FadingImage = styled.image`
@@ -26,7 +8,7 @@ export const FadingImage = styled.image`
 
 export const Context = styled.main`
 
-  background-color: #727878;//#6d6d73;
+  background-color:rgb(255, 255, 255);//#6d6d73;
   background-image: linear-gradient(to bottom right, #C4C7C8, #2B3231);
   padding: 3px;
   margin-bottom: 2px;
@@ -37,7 +19,6 @@ export const Context = styled.main`
 export const Footer = styled.footer`
 
   background-color: #2B3231;//#727878;//#6d6d73;
-  /* background-image: linear-gradient(to bottom right, #C4C7C8, #2B3231); */
   padding: 3px;
   margin-bottom: 2px;
   text-align: center;
@@ -45,7 +26,6 @@ export const Footer = styled.footer`
 `;
 
 export const AddTM = styled.button`
-  /* display: inline-block; */
 
   font-size: 1em;
   margin: 1em;
@@ -70,19 +50,11 @@ export const AddTM = styled.button`
 `
 
 export const EditTM = styled(AddTM)`
-  
-  /* display: inline-block; */
-
-  /* font-size: 1em; */
+/
   margin: 0.25em;
-  /* padding: 0.25em 1em; */
-  /* border: 2px solid #5e616e; */
   border-radius: 7px;
-  /* display: block; */
-  /* background-color: #5e616e; */
-  /* color: white; */
   
-  
+
 
   &:hover {
     /* font-size: 1em; */
@@ -99,10 +71,6 @@ export const EditTM = styled(AddTM)`
 
 export const DeleteTM = styled(EditTM)`
   
-  /* display: inline-block; */
-
-  /* font-size: 1em;
-  /* margin: 0.25em; */
   padding: 0.25em 0.5em; 
   border: 2px solid #DB6653;
   /* border-radius: 7px;
@@ -158,7 +126,7 @@ padding: 0.5rem;
 /* background-color: rgb(233, 231, 231); */
 /* background-color: rgb(231, 196, 196); */
 /* border-bottom: 1px solid black; */
-background-color: ${({ hasPhotos }) => (hasPhotos ? 'rgb(233, 231, 231)' : 'rgb(231, 196, 196)')}; 
+background-color: ${({ hasPhotos }) => (hasPhotos ? 'rgb(233, 231, 231)' : 'rgb(240, 211, 211)')}; 
 border-radius: 0.5rem;
 
 &:hover{
@@ -168,3 +136,13 @@ border-radius: 0.5rem;
 }
 
 `
+
+export const RegisterSection = styled.section`
+  background: rgba(208, 225, 241, 0.5);
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  border-radius: 30px;
+  margin: 0 auto;
+  animation: ${fadeInUp} 1s ease-out;
+`;

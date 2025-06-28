@@ -6,15 +6,22 @@ import type { Config, ProjectType } from '../types'
 
 export const useProject = (clientId: number, config : Config) => {
 
-    const [projects, setProjects] = useState<Array<ProjectType>>([])
+    const defaultProject : ProjectType= {
+      id: -1,
+      name: '',
+      client: -1
+    }
+
+    const [projects, setProjects] = useState<Array<ProjectType>>([defaultProject, ])
 
 
     useEffect( () => {
         axios.get(DRF_ADRESS + `/api/project/filter/?client=${clientId}`, config)
         .then(response => {
-          setProjects(response.data)
+          setProjects(response.data ?? [defaultProject, ])
         })
         .catch(error => {
+          setProjects([defaultProject, ])
           notify_error(error)
         })
   

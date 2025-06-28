@@ -11,10 +11,11 @@ import {
     Span,
     InnerContainer,
     WrapperContainer,
+    RegisterSection,
     
 }from './register.styles.tsx'; 
 
-import { Context, EditBtn, DeleteBtn, AddBtn } from '../../styles/Generic.styles.tsx'
+import { Context, EditBtn, DeleteBtn, AddBtn,  } from '../../styles/Generic.styles.tsx'
 
 import {
   FormGroup,
@@ -27,6 +28,7 @@ import { useAuthContext } from '../../context/AuthContext.tsx'
 import {DRF_ADRESS, PERMISSIONS} from '../../data/constants.js'
 
 import type { RegisterType, ClientType, ProjectType, ValidateRegister   } from '../../types/index.tsx'
+import { HeroSection, HeroTitle } from '../Home/home.styles.tsx'
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -142,21 +144,21 @@ const BushingRegister = () => {
 
           <div className='row d-flex' style={{margin: '2rem'}}>
 
-            <div className='col d-flex justify-content-center' > 
+            <div className='col' > 
               <Span
                   onClick={() => displayCompleted('o_use')}
                   className={viewSelector ==='o_use' ? "active" : "" }>
                   OUT OF USE
               </Span>
             </div>
-            <div className='col d-flex justify-content-center'> 
+            <div className='col '> 
               <Span
                   onClick={() => displayCompleted('i_use')}
                   className={viewSelector ==='i_use' ? "active" : "" }>
                   IN USE
               </Span>
             </div>
-            <div className='col d-flex justify-content-center' > 
+            <div className='col' > 
               <Span
                   onClick={() => displayCompleted('warehouse')}
                   className={viewSelector === 'warehouse' ? "active": ""}>
@@ -514,12 +516,13 @@ const BushingRegister = () => {
 
     const getClientList = () => {
 
-      axios.get(DRF_ADRESS + `/api/client`, config)
+      axios.get(DRF_ADRESS + `/api/client/`, config)
       .then(response => {
 
-        setClients(response.data)
+        setClients(response.data ?? [])
       })
       .catch(error => {
+        setClients([])
         notify_error(error)
       })
 
@@ -557,12 +560,12 @@ const BushingRegister = () => {
     <Context >
 
 
-      
-      <h1 className="text" style={{textAlign: 'center', marginBlock: '3rem'}}> wishbone bushing management </h1>
-
+      <HeroSection> 
+        <HeroTitle> Bushin registry management </HeroTitle>
+      </HeroSection>
 
         <div className="col-md-9  mx-auto " style={{marginBottom: '4rem'}}>
-          <div className="card p-4" >
+          <RegisterSection>
             <div style={{textAlign: 'center'}}>
             <a style={{fontSize: '20px'}}>Welcome to the Wishbone Bushing List!</a><br/>
             <hr></hr>
@@ -603,7 +606,7 @@ const BushingRegister = () => {
             
             {renderTMList()}
 
-          </div>
+          </RegisterSection>
         </div>
       
 
@@ -651,7 +654,7 @@ const BushingRegister = () => {
         ): null}
 
 
-        {/* <BWIFooter></BWIFooter> */}
+        
     </Context>
   
   
