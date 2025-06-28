@@ -28,8 +28,10 @@ export const useSearch = (query : string, pageNumber :number, config :object, re
           setList(prevItems => 
           {
             let newData  = data.results.map((item : any) => {
-              item.photo_links = JSON.parse(JSON.stringify(item.photos)) ?? []
-              item.photos = null
+              debugger
+              if (!item?.photo_links){
+                item.photo_links = JSON.parse(JSON.stringify(item.photos ?? [])) 
+                item.photos = null}
               return item
             })
             const combined = [...prevItems, ...newData]

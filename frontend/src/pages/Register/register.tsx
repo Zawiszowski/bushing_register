@@ -419,7 +419,7 @@ const BushingRegister = () => {
       let formDataItem = new FormData()
 
       Object.entries(item).forEach( ([key, value], _) =>{
-        if(value === null || key==='photo_links' || key === 'project'){
+        if(value === null || value === -1 || key==='photo_links' || key === 'project'){
   
         }else if(Array.isArray(value)){
     
@@ -434,7 +434,7 @@ const BushingRegister = () => {
       })
       
 
-      if (item.id) {
+      if (item.id !== -1) {
         axios
           .put(DRF_ADRESS + `/api/bushing_register/${item.id}/`, formDataItem, config)
           .then(_ => {

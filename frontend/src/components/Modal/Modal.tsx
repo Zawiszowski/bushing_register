@@ -46,7 +46,7 @@ const CustomModal = (props : Props) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
     const client_name_init = 'new client to add'
-    const client_id_init = JSON.parse(JSON.stringify(activeItem.project ? clients.find(item => item.id === (activeItem.project?.client))?.id : clients.find(item => item.name === client_name_init)?.id ))
+    const client_id_init = JSON.parse(JSON.stringify(activeItem.project.id !== -1 ? clients.find(item => item.id === (activeItem.project?.client))?.id : clients.find(item => item.name === client_name_init)?.id ))
 
 
     const [clientId, setClientId] = useState(client_id_init) // tutaj dodać warunek na newclient to add
