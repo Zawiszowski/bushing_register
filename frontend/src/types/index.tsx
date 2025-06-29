@@ -81,6 +81,11 @@ export interface ClientType {
     name: string,
 }
 
+export interface MCType {
+    id: number, 
+    name: string,
+}
+
 export interface ProjectType {
     id: number,
     name: string,

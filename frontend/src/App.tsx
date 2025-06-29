@@ -10,6 +10,7 @@ import AuthComponent from './pages/Login/login2';
 import BushingRegister from './pages/Register/register';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import StiffnesCalculator from './pages/StiffnessCalculator/stiffnesCalculator';
+import { ToastContainer } from 'react-toastify';
 
 function App(){
 
@@ -22,6 +23,18 @@ function App(){
         <Router>
           <AuthProvider>
             <Navbar/>
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark">
+                </ToastContainer>
           
             <Routes>
               
