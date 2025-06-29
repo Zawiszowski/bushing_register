@@ -118,6 +118,7 @@ color: black;
 
 export const EditBtn = styled(Button)`
   padding: 0.5rem 2rem;
+  margin: 0.5rem;
   border-radius: 10px;
   color: black;
   background:rgb(236, 234, 199);
@@ -125,6 +126,7 @@ export const EditBtn = styled(Button)`
 
 export const DeleteBtn = styled(Button)`
 padding: 0.5rem 2rem;
+margin: 0.5rem;
 border-radius: 10px;
 color: black;
   background:rgb(226, 155, 143);

@@ -150,7 +150,7 @@ const CustomModal = (props : Props) => {
     };
 
     const photoGalleryBtn = () => {
-        debugger
+
         if(state.photo_links.length > 0){
             
             return(
@@ -173,6 +173,7 @@ const CustomModal = (props : Props) => {
     }
 
     const createdAtDate = () => {
+        debugger
         if(readOnly){
             return(
             <FormGroup>
@@ -180,7 +181,7 @@ const CustomModal = (props : Props) => {
             <Input
                 type='date'
                 name="post_date"
-                value={state.created_at}
+                value={state.created_at ? state.created_at.substring(0, 10) : ""}
                 placeholder = "Enter Date"
                 dateFormat="DD-MM-YYYY"
                 readOnly={readOnly}
@@ -213,7 +214,6 @@ const CustomModal = (props : Props) => {
     },[projects])
 
     useEffect(( ) => {
-        debugger
         if (state.project && clientId && newItem && projects.length > 0)
         {
             const year = new Date().getFullYear()
@@ -234,7 +234,7 @@ const CustomModal = (props : Props) => {
             <>
             <Modal isOpen={true} toggle={toggle} centered={true}  style={{maxWidth: '1000px'}}>
                 <ModalHeader toggle={toggle}>
-                    wishbone bushing Item
+                    Bushing Item
                 </ModalHeader>
 
                 <ModalBody>

@@ -380,7 +380,7 @@ const BushingRegister = () => {
             onClick={() => editItem(item)}
             style={{width: '100%'}}
             > 
-            Edit </EditBtn>any
+            Edit </EditBtn>
           <DeleteBtn  
             hidden={!user?.permissions.includes(PERMISSIONS.CAN_DELETE_TM)}
             onClick={() => acceptanceWIndow(item)} 
@@ -509,7 +509,7 @@ const BushingRegister = () => {
           <>
           <AddBtn 
           disabled={!user?.permissions.includes(PERMISSIONS.CAN_ADD_TM)} 
-          onClick={createItem}>Add wishbone bushing</AddBtn>
+          onClick={createItem}>Add Bushing</AddBtn>
           </>
         )}
     }
@@ -567,10 +567,10 @@ const BushingRegister = () => {
         <div className="col-md-9  mx-auto " style={{marginBottom: '4rem'}}>
           <RegisterSection>
             <div style={{textAlign: 'center'}}>
-            <a style={{fontSize: '20px'}}>Welcome to the Wishbone Bushing List!</a><br/>
+            <a style={{fontSize: '20px'}}>Welcome to the Bushing List!</a><br/>
             <hr></hr>
 
-            Here you will find a comprehensive selection of wishbone bushings for shock absorbers, designed to enhance your vehicle's performance and comfort. <br/>
+            Here you will find a comprehensive selection of bushings for shock absorbers, designed to enhance your vehicle's performance and comfort. <br/>
             Browse through our list to find the perfect fit for your needs.<br/>
             This is a complete overview of our bushings, where we track stiffness, location, and condition using photos.
 

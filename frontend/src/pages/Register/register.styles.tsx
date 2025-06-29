@@ -126,13 +126,13 @@ padding: 0.5rem;
 /* background-color: rgb(233, 231, 231); */
 /* background-color: rgb(231, 196, 196); */
 /* border-bottom: 1px solid black; */
-background-color: ${({ hasPhotos }) => (hasPhotos ? 'rgb(233, 231, 231)' : 'rgb(240, 211, 211)')}; 
+background-color: ${({ hasPhotos }) => (hasPhotos ? 'rgb(195, 210, 231)' : 'rgb(240, 211, 211)')}; 
 border-radius: 0.5rem;
 
 &:hover{
   border-radius: 0.5rem;
   transition: background-color 0.5s ease-in-out;
-  background-color: rgb(156, 156, 156);
+  background-color: rgb(255, 255, 255);
 }
 
 `
