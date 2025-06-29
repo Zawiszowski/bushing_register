@@ -113,6 +113,7 @@ export interface RegisterType {
 
 export interface ValidateRegister {
     client: boolean,
+    mountingComp: boolean,
     project_id: boolean,
     axle: boolean,
     custom_pn: boolean,

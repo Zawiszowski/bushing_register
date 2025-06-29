@@ -22,11 +22,12 @@ import{
 
 import PhotoGallery from '../PhotoGallery/PhotoGallery';
 
-import type { RegisterType, ClientType, Config, ValidateRegister } from '../../types';
+import type { RegisterType, ClientType, Config, ValidateRegister, MCType } from '../../types';
 
 interface Props {
     activeItem: RegisterType,
     clients: Array<ClientType>,
+    mountingComp: Array<MCType>
     config: Config,
     toggle: () => void,
     onSave: (item : RegisterType) => void,
@@ -39,17 +40,20 @@ interface Props {
 
 
 const CustomModal = (props : Props) => {
-    const {activeItem, clients, config, toggle, onSave, checkCustomPn, validate, setValidate,  readOnly} = props;
+    const {activeItem, clients, mountingComp, config, toggle, onSave, checkCustomPn, validate, setValidate,  readOnly} = props;
     const initCustomPN = JSON.parse(JSON.stringify(activeItem.custom_pn))
     const [state, setState] = useState<RegisterType>(activeItem);
     const [photoGallery, setPhotoGallery] = useState(false);
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
-    const client_name_init = 'new client to add'
-    const client_id_init = JSON.parse(JSON.stringify(activeItem.project.id !== -1 ? clients.find(item => item.id === (activeItem.project?.client))?.id : clients.find(item => item.name === client_name_init)?.id ))
+    const client_name_init = 'other'
+    const client_id_init = JSON.parse(JSON.stringify(activeItem.project.id !== -1 ? clients.find(item => item.id === (activeItem.project?.client))?.id : clients.find(item => item.name.toLowerCase() === client_name_init)?.id ))
 
+    const mc_name_init = 'other'
+    const mc_id_init = JSON.parse(JSON.stringify(activeItem.project.id !== -1 ? mountingComp.find(item => item.id === (activeItem.project?.client))?.id : mountingComp.find(item => item.name.toLowerCase() === mc_name_init)?.id ))
 
-    const [clientId, setClientId] = useState(client_id_init) // tutaj dodać warunek na newclient to add
+    const [clientId, setClientId] = useState(client_id_init) 
+    const [mountingCompId, setMountingCompId] = useState(mc_id_init)
     const {projects} = useProject(clientId, config)
     const axle = ['Front','Rear']
     const newItem = activeItem.custom_pn === '' && activeItem.client_pn === '' ? true:false
@@ -98,6 +102,14 @@ const CustomModal = (props : Props) => {
             setState({...state, [name]: value});
 
             setClientId(parseInt(value))
+
+            setValidate({...validate, project_id: true, [name]: true});
+
+
+        }else if(e.target.name ==='mountingComp') {
+            setState({...state, [name]: value});
+
+            setMountingCompId(parseInt(value))
 
             setValidate({...validate, project_id: true, [name]: true});
 
@@ -173,7 +185,7 @@ const CustomModal = (props : Props) => {
     }
 
     const createdAtDate = () => {
-        debugger
+
         if(readOnly){
             return(
             <FormGroup>
@@ -302,6 +314,27 @@ const CustomModal = (props : Props) => {
                              ) )
                         }
                             
+                        </Input>
+                        </FormGroup>
+
+                        <FormGroup>
+                        <Label for="mountingComp">Counting Component</Label>
+                        <Input
+                            valid={!readOnly && validate.mountingComp}
+                            invalid={!readOnly && !validate.mountingComp}
+                            type="select"
+                            name="mountingComp"
+                            value={mountingCompId}
+                            onChange={handleChange}
+                            placeholder="Choice Mounting Component"
+                            
+                        >   
+                            {
+                                mountingComp.map(mc => (
+                                    <option value={mc.id} key={mc.id}>{mc.name?.toUpperCase()}</option>
+                                ))
+                            }
+
                         </Input>
                         </FormGroup>
                         

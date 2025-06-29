@@ -16,7 +16,7 @@ class bushingAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('project', 'axle', 'custom_pn', 'client_pn', 'decommissioned', 'storage_locker', 'velocity', 'stiffness_x', 'stiffness_y', 'created_by', 'updated_by')
+            'fields': ('project', 'axle', 'custom_pn', 'client_pn', 'decommissioned', 'storage_locker', 'velocity', 'stiffness_x', 'stiffness_y', 'mounting_component', 'created_by', 'updated_by')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

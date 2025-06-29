@@ -27,7 +27,7 @@ import {
 import { useAuthContext } from '../../context/AuthContext.tsx'
 import {DRF_ADRESS, PERMISSIONS} from '../../data/constants.js'
 
-import type { RegisterType, ClientType, ProjectType, ValidateRegister   } from '../../types/index.tsx'
+import type { RegisterType, ClientType, ProjectType, ValidateRegister, MCType   } from '../../types/index.tsx'
 import { HeroSection, HeroTitle } from '../Home/home.styles.tsx'
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -40,6 +40,12 @@ const defaultProject : ProjectType = {
     name: '',
 }
 const defaultClient : ClientType = {
+    id: -1,
+    name: '',
+
+}
+
+const defaultMountingComp : MCType = {
     id: -1,
     name: '',
 
@@ -66,6 +72,7 @@ const defaultRegister : RegisterType = {
 
 const defaultFalseValidate : ValidateRegister = {
     client: false,
+    mountingComp: false,
     project_id: false,
     axle: true,
     custom_pn: false,
@@ -77,6 +84,7 @@ const defaultFalseValidate : ValidateRegister = {
   }
   const defaultTrueValidate : ValidateRegister = {
     client: true,
+    mountingComp: true,
     project_id: true,
     axle: true,
     custom_pn: true,
@@ -103,6 +111,7 @@ const BushingRegister = () => {
   const observer = useRef<any>('')
   const [query, setQuery] = useState('')
   const [clients, setClients] = useState<Array<ClientType>>([defaultClient, ])
+  const [mountingComp, setMountingComp] = useState<Array<MCType>>([defaultMountingComp, ])
   
   const {loading, error, list, hasMore} = useSearch(query, pageNumber, config, refresh)
   let [activeItem, setActiveItem] = useState<RegisterType>(
@@ -528,6 +537,20 @@ const BushingRegister = () => {
 
     }
 
+    const getMountingList = () => {
+
+      axios.get(DRF_ADRESS + `/api/mounting_component/`, config)
+      .then(response => {
+
+        setMountingComp(response.data ?? [])
+      })
+      .catch(error => {
+        setMountingComp([])
+        notify_error(error)
+      })
+
+    }
+
 
     
     useEffect(() =>{
@@ -552,6 +575,7 @@ const BushingRegister = () => {
 
     useEffect( () => {
       getClientList()
+      getMountingList()
     }, [])
 
 
@@ -618,6 +642,7 @@ const BushingRegister = () => {
         <Modal 
           activeItem={activeItem} 
           clients={clients}
+          mountingComp={mountingComp}
           config={config}
           toggle={toggle}
           onSave={handleSubmit}
@@ -633,6 +658,7 @@ const BushingRegister = () => {
         <Modal 
           activeItem={activeItem} 
           clients={clients}
+          mountingComp={mountingComp}
           config={config}
           toggle={toggleDetail}
           onSave={() => {}}

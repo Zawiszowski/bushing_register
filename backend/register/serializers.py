@@ -28,6 +28,7 @@ class FileModelSerializer(serializers.ModelSerializer):
 class bushingSerializer(serializers.ModelSerializer):
     photos = FileModelSerializer(read_only=True, many=True)
     project = ProjectModelSerializer(read_only=True)
+    mounting_component = MountingComponentSerializer(read_only=True)
     project_id = serializers.PrimaryKeyRelatedField(queryset=ProjectModel.objects.all(), source='project')
     class Meta:
         model = BushingRegister
