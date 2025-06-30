@@ -151,7 +151,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
 
     useEffect(()=> {
 
-        let interval: number
+        let interval: ReturnType<typeof setTimeout>
         let thirteen: number = 1000 * 60 * 6
         if(loading){
             setLoading(false)

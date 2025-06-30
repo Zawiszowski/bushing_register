@@ -109,7 +109,7 @@ const BushingRegister = () => {
   const [validate, setValidate] = useState<ValidateRegister>(defaultFalseValidate);
   const [pageNumber, setPageNumber] = useState(1)
   const observer = useRef<any>('')
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState('decommissioned=false&search=' + debouncedSearch) //  'i_use' --- > 'decommissioned=false&search=' + debouncedSearch
   const [clients, setClients] = useState<Array<ClientType>>([defaultClient, ])
   const [mountingComp, setMountingComp] = useState<Array<MCType>>([defaultMountingComp, ])
   
@@ -357,7 +357,7 @@ const BushingRegister = () => {
     </WrapperContainer>
     )
 
-    const renderTMList = () => {
+    const renderBushingList = () => {
       return (
         <div >
           {list?.map((item, index) => {
@@ -628,7 +628,7 @@ const BushingRegister = () => {
 
             <hr style={{marginBlock: '3rem'}}></hr>
             
-            {renderTMList()}
+            {renderBushingList()}
 
           </RegisterSection>
         </div>
