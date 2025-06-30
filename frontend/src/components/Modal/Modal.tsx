@@ -230,7 +230,7 @@ const CustomModal = (props : Props) => {
         {
             const year = new Date().getFullYear()
             const axle_str = state.axle === 'Rear' ? 'RR' : 'FR'
-            const Custom_id_auto_name = clients.find(item => item.id === clientId)?.name.substring(0, 3) + ' ' + String(year).substring(2, 4) + " " + projects.find(proj_item => proj_item.id === Number(state.project_id))?.name?.replaceAll(' ','_') + '-' + axle_str + '-' + '01'
+            const Custom_id_auto_name = clients.find(item => item.id === clientId)?.name.substring(0, 3) + ' ' + String(year).substring(2, 4) + " " + projects.find(proj_item => proj_item.id === Number(state.project_id))?.name?.replace('/ /g','_') + '-' + axle_str + '-' + '01'
             setState({...state, custom_pn: Custom_id_auto_name, project: {...projects.find(proj_item => proj_item.id === Number(state.project_id)) ?? {id: -1, name: '', client: -1}}});
 
         }
@@ -318,7 +318,7 @@ const CustomModal = (props : Props) => {
                         </FormGroup>
 
                         <FormGroup>
-                        <Label for="mountingComp">Counting Component</Label>
+                        <Label for="mountingComp">Mounting Component</Label>
                         <Input
                             valid={!readOnly && validate.mountingComp}
                             invalid={!readOnly && !validate.mountingComp}
