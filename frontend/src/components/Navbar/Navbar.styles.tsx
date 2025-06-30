@@ -44,7 +44,7 @@ export const NavigationLink = styled(NavLink)`
     display: flex;
     
     align-items: center;
-    
+    margin: 1.5rem;
     text-decoration: none;
     padding: 0 1.5rem;
     height: 100%;
@@ -88,6 +88,7 @@ export const NavMenu = styled.div<{ isOpen: boolean }>`
     top: 90px;
     justify-content: center;
     left: 0;
+    z-index: 999;
     width: 100%;
     background: white;
     flex-direction: column;
@@ -142,8 +143,7 @@ export const MobileIcon = styled.div`
     position: absolute;
     /* top: 0; */
     left: 15px;
-    /* justify-content: center; */
-    transform: translate(20%, 75%);
+    transform: translate(0%, 50%);
     font-size: 1.8rem;
     cursor: pointer;
   }
