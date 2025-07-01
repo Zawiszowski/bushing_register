@@ -1,0 +1,18 @@
+FROM python:3.11
+
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+WORKDIR /bushing_register/backend
+
+COPY . /bushing_register/backend/
+RUN mkdir -p /bushing_register/media
+
+RUN pip install --upgrade pip
+RUN pip install gunicorn
+RUN pip install -r requirements.txt
+
+RUN python manage.py collectstatic --no-input
+
+RUN chmod +x ./wsgi-entrypoint.sh
+ENTRYPOINT ./wsgi-entrypoint.sh

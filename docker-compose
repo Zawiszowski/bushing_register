@@ -1,0 +1,42 @@
+services:
+  br_backend:
+    container_name: br_backend
+    restart: unless-stopped
+    build: 
+        context: backend
+        dockerfile: ./Dockerfile-dev
+
+    volumes:
+      - br_media:/bushing_register/backend/media
+    expose:
+      - 8000
+    depends_on:
+      - br_database_psql
+
+  br_frontend: 
+    container_name: br_frontend
+    restart: unless-stopped
+    build: 
+        context: ./
+        dockerfile: ./frontend/Dockerfile-dev
+    ports:
+        - 80:80
+    volumes:
+        - ./docker/nginx/development:/etc/nginx/conf.d
+        - br_media:/bushing_register/media
+    depends_on: 
+        - br_backend
+  
+  br_database_psql:
+    image: postgres:16.2-alpine
+    restart: unless-stopped
+    container_name: br_database_psql
+    volumes:
+      - br_postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env_psql
+
+
+volumes:
+  br_media:
+  br_postgres_data:

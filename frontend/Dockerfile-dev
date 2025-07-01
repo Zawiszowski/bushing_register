@@ -1,0 +1,21 @@
+FROM node:18.20.8-alpine AS build
+
+WORKDIR /bushing_register/frontend/
+
+RUN pwd
+
+COPY frontend /bushing_register/frontend/
+
+RUN npm ci --silent
+RUN npm run build --force
+
+from bushing_register-br_backend as backend
+#second stage - copy react/django static and start nginx
+FROM nginx:stable
+COPY --from=build /bushing_register/frontend/build /bushing_register/client
+
+COPY --from=backend /bushing_register/backend/django_static /bushing_register/backend_static
+COPY --from=backend /bushing_register/backend/media /bushing_register/media
+
+COPY nginx/development.conf /etc/nginx/conf.d/
+CMD ["nginx", "-g", "daemon off;"]
