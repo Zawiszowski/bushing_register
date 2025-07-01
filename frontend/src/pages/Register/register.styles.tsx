@@ -50,7 +50,7 @@ export const AddTM = styled.button`
 `
 
 export const EditTM = styled(AddTM)`
-/
+
   margin: 0.25em;
   border-radius: 7px;
   
