@@ -8,8 +8,6 @@ services:
 
     volumes:
       - br_media:/bushing_register/backend/media
-    expose:
-      - 8000
     depends_on:
       - br_database_psql
 
@@ -22,7 +20,7 @@ services:
     ports:
         - 80:80
     volumes:
-        - ./docker/nginx/development:/etc/nginx/conf.d
+        - ./nginx/development:/etc/nginx/conf.d
         - br_media:/bushing_register/media
     depends_on: 
         - br_backend

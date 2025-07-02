@@ -7,15 +7,15 @@ RUN pwd
 COPY frontend /bushing_register/frontend/
 
 RUN npm ci --silent
-RUN npm run build --force
+RUN npm run build
 
 from bushing_register-br_backend as backend
 #second stage - copy react/django static and start nginx
 FROM nginx:stable
-COPY --from=build /bushing_register/frontend/build /bushing_register/client
+COPY --from=build /bushing_register/frontend/dist /bushing_register/client
 
 COPY --from=backend /bushing_register/backend/django_static /bushing_register/backend_static
 COPY --from=backend /bushing_register/backend/media /bushing_register/media
 
-COPY nginx/development.conf /etc/nginx/conf.d/
+COPY nginx/development/development.conf /etc/nginx/conf.d/
 CMD ["nginx", "-g", "daemon off;"]
