@@ -1,5 +1,5 @@
 
-import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, ButtonGroup, Button
+import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle
  } from '../Home/home.styles';
 
 

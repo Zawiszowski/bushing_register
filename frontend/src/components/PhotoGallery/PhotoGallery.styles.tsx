@@ -1,11 +1,8 @@
 import styled from 'styled-components'
 
 import{
-    Button,
     Modal, 
-    ModalHeader,
     ModalBody,
-    ModalFooter,
     Input,
     
 } from 'reactstrap';
