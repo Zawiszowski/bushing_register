@@ -486,7 +486,7 @@ const CustomModal = (props : Props) => {
                             placeholder="Enter factor"
                         />
                         </FormGroup>
-                        {LineChart(state.stiffness_x, state.stiffness_y)}
+                        <LineChart x={state.stiffness_x } y={state.stiffness_y}></LineChart>
                         {createdAtDate()}
                         </div>
                         </div>

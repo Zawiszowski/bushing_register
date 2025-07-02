@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  type ChartOptions,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 // import faker from 'faker';
@@ -24,7 +25,7 @@ ChartJS.register(
   ChartDeaffed
 );
 
-export const options = {
+export const options : ChartOptions<'line'> = {
   responsive: true,
 
     scales: {
@@ -53,9 +54,6 @@ export const options = {
 
     },
     plugins: {
-      animation: {
-        duration: 0
-    },
     legend: {
         display: false,
       position: 'top',
@@ -76,7 +74,7 @@ export const options = {
 };
 
 
-export default function LineChart(x : Array<number>, y : Array<number>){
+export default function LineChart({ x, y }: { x: number[]; y: number[] }){
   var stiffness_x = x
   var stiffness_y = y
   
