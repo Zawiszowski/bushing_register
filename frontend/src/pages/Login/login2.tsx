@@ -236,7 +236,7 @@ useEffect(() =>{
                   </IconLeft>
                   <Input
                     type="text"
-                    name="name"
+                    name="surename"
                     value={formData.surename}
                     onChange={handleInputChange}
                     placeholder="Wprowadź swoje nazwisko"
