@@ -3,22 +3,23 @@ COMPOSE=docker compose $(COMPOSE_OPTS)
 
 
 build:
-	$(COMPOSE) build
+	$(COMPOSE) build br_backend
+	$(COMPOSE) build br_frontend
 
-up: build
-	$(COMPOSE) up
+up:
+	$(COMPOSE) up br_backend br_frontend
 
 down:
 	$(COMPOSE) down --rmi all --volumes --remove-orphans
 
 bash:
-	$(COMPOSE) exec django bash
+	$(COMPOSE) exec br_backend bash
 
-remove image $(image_id):
+remove-image:
 	docker rmi -f $(image_id)
 
-remove all images: # it removes all unused images
+remove-all-images: # it removes all unused images
 	docker image prune -a 
 
-open: $(image_id)
+open:
 	docker exec -it $(image_id) sh

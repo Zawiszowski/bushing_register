@@ -3,5 +3,7 @@ build
 dist
 npm-debug.log
 logs
+.env
+.env.psql
 
 yarn-error.log

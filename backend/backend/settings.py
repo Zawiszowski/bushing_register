@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
+
 import os 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default='insecure-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
@@ -88,11 +89,11 @@ DATABASES = {
     'default': {
         
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('PSQL_NAME'),
-        'USER': config('PSQL_USER'),
-        'PASSWORD': config('PSQL_PASSWORD'),
-        'HOST': config('PSQL_HOST'),
-        'PORT': config('PSQL_PORT'),
+        'NAME': config('PSQL_NAME', default=''),
+        'USER': config('PSQL_USER', default=''),
+        'PASSWORD': config('PSQL_PASSWORD', default=''),
+        'HOST': config('PSQL_HOST', default=''),
+        'PORT': config('PSQL_PORT', default=''),
     }
 }
 
@@ -103,7 +104,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #'django.core.m
 # EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='')
 
 AUTH_USER_MODEL = "users.CustomUser"
 
@@ -152,7 +153,7 @@ STATIC_URL = '/django_static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'django_static')
 
 
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=lambda v: [s.strip() for s in v.split(',')])
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='', cast=lambda v: [s.strip() for s in v.split(',')])
 CORS_ALLOW_CREDENTIALS = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

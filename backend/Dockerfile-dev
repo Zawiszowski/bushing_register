@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 WORKDIR /bushing_register/backend
 
 COPY . /bushing_register/backend/
-RUN mkdir -p /bushing_register/media
+RUN mkdir -p /bushing_register/backend/media
 
 RUN pip install --upgrade pip
 RUN pip install gunicorn

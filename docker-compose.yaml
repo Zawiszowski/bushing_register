@@ -5,7 +5,8 @@ services:
     build: 
         context: backend
         dockerfile: ./Dockerfile-dev
-
+    env_file:
+      - .env
     volumes:
       - br_media:/bushing_register/backend/media
     depends_on:
@@ -32,7 +33,7 @@ services:
     volumes:
       - br_postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env_psql
+      - .env.psql
 
 
 volumes:
