@@ -162,7 +162,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
    
         
             interval =  setInterval(()=> {
-                if(authTokens){
+                if(authTokens.refresh !== defaultAuthTokens.refresh){
                     updateToken()
                 }
             }, thirteen)
