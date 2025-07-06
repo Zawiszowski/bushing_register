@@ -2,6 +2,7 @@ services:
   br_backend:
     container_name: br_backend
     restart: unless-stopped
+    image: ghcr.io/zawiszowski/bushing_register-br_backend:latest
     build: 
         context: backend
         dockerfile: ./Dockerfile.dev
@@ -15,13 +16,14 @@ services:
   br_frontend: 
     container_name: br_frontend
     restart: unless-stopped
+    image: ghcr.io/zawiszowski/bushing_register-br_frontend:latest
     build: 
         context: ./
-        dockerfile: ./frontend/Dockerfile.dev
+        dockerfile: ./frontend/Dockerfile.prod
     ports:
         - 80:80
     volumes:
-        - ./nginx/development:/etc/nginx/conf.d
+        - ./nginx/production:/etc/nginx/conf.d
         - br_media:/bushing_register/media
     depends_on: 
         - br_backend
