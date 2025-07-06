@@ -1,7 +1,7 @@
 
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import zawilogo from '../../assets/zawi4.png'
+import zawilogo from '../../assets/steve_alone.png'
 
 
 
