@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: br-backend-service
+spec:
+
+  selector:
+    app: br-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: br-frontend-service
+spec:
+  type: NodePort #ClusterIP
+  selector:
+    app: br-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: br-database-service
+spec:
+  selector:
+    app: br-database-psql
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

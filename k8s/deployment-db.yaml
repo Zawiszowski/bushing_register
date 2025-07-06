@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: br-database-psql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: br-database-psql
+  template:
+    metadata:
+      labels:
+        app: br-database-psql
+    spec:
+      containers:
+      - name: br-database-psql-c
+        image: postgres:16.2-alpine
+        envFrom:
+          - secretRef:
+              name: br-db-env
+        volumeMounts:
+          - name: br-postgres-data
+            mountPath: /var/lib/postgresql/data/
+      volumes:
+        - name: br-postgres-data
+          persistentVolumeClaim:
+            claimName: br-postgres-pvc

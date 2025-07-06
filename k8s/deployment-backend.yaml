@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: br-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: br-backend
+  template:
+    metadata:
+      labels:
+        app: br-backend
+    spec:
+      containers:
+      - name: br-backend-c
+        image: ghcr.io/zawiszowski/bushing_register-br_backend:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+          - secretRef:
+              name: br-env
+        volumeMounts:
+          - name: br-media
+            mountPath: /bushing_register/backend/media
+      volumes:
+        - name: br-media
+          persistentVolumeClaim:
+            claimName: br-media-pvc

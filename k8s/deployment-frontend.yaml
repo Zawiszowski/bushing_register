@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: br-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: br-frontend
+  template:
+    metadata:
+      labels:
+        app: br-frontend
+    spec:
+      containers:
+      - name: br-frontend-c
+        image: ghcr.io/zawiszowski/bushing_register-br_frontend:latest
+        volumeMounts:
+          - name: br-media
+            mountPath: /bushing_register/media
+
+        
+      volumes:
+        - name: br-media
+          persistentVolumeClaim:
+            claimName: br-media-pvc
