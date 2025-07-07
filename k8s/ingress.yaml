@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
   - hosts:
-      - examplee.com
+      - stevesleeve.dev
     secretName: br-tls
   rules:
-  - host: examplee.com
+  - host: stevesleeve.dev
     http:
       paths:
       - path: /
