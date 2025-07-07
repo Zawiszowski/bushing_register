@@ -2,7 +2,7 @@ import React from 'react';
 import { FooterContainer, FooterLink, Container, ContentSection, ContactItem, SocialLink, SocialLinks, SocialSection, SocialText, Row, Column, SectionTitle, Logo, Description,
   LinkItem, Icon, Copyright } from './Footer.styles';
 import type { SocialLinkData, ProductLink, UsefulLink } from '../../types';
-import _logo from '../../assets/steve_alone.png';
+import _logo from '../../assets/blue_steve.png';
 import { FaFacebook, FaTwitter, FaGoogle, FaGithub, FaLinkedin } from 'react-icons/fa';
 
 // Component
@@ -102,6 +102,7 @@ const Footer: React.FC = () => {
             <Column md={3} lg={4} xl={3}>
               <SectionTitle>
                 <Logo src={_logo} alt=" Group Logo" />
+                stevesleeve
                  
               </SectionTitle>
               <Description>

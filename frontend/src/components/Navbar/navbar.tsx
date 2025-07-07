@@ -41,8 +41,11 @@ const Navbar = () => {
     return (
       <>
         <Nav>
+            <div style={{fontSize: "30px"}}>
             <Logo></Logo>
-
+            stevesleeve
+            </div>
+              
             <MobileIcon onClick={toggleMenu}>
 
               <FaBars />

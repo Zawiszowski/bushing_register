@@ -1,16 +1,16 @@
 
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import zawilogo from '../../assets/steve_alone.png'
+import zawilogo from '../../assets/blue_steve.png'
 
 
 
 export const Logo = styled.img.attrs({
   src: `${zawilogo}`
   })`
-  width: 50px;
-  height: 50px;
-  margin: 15px;
+  width: 90px;
+  height: 90px;
+  margin: 2px;
   @media screen and (max-width: 768px) {
     margin-left: 4rem;
   }
@@ -143,7 +143,7 @@ export const MobileIcon = styled.div`
     position: absolute;
     /* top: 0; */
     left: 15px;
-    transform: translate(0%, 50%);
+    transform: translate(0%, 40%);
     font-size: 1.8rem;
     cursor: pointer;
   }
