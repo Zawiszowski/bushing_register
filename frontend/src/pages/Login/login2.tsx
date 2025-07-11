@@ -192,12 +192,12 @@ useEffect(() =>{
             </IconWrapper>
             
             <Title>
-              {isLogin ? 'Zaloguj się' : 'Zarejestruj się'}
+              {isLogin ? 'Sign in' : 'Register'}
             </Title>
             <Subtitle>
               {isLogin 
-                ? 'Witaj ponownie! Wprowadź swoje dane.' 
-                : 'Stwórz nowe konto, aby rozpocząć.'
+                ? 'Hello again ! Enter your credencials.' 
+                : 'Create new account to begin.'
               }
             </Subtitle>
           </Header>
@@ -350,7 +350,7 @@ useEffect(() =>{
                   {isLogin ? 'Logowanie...' : 'Rejestracja...'}
                 </LoadingWrapper>
               ) : (
-                isLogin ? 'Zaloguj się' : 'Zarejestruj się'
+                isLogin ? 'Sign in' : 'Register'
               )}
             </SubmitButton>
             {authError && (
@@ -381,7 +381,7 @@ useEffect(() =>{
                 type="button"
                 onClick={toggleMode}
               >
-                {isLogin ? 'Zarejestruj się' : 'Zaloguj się'}
+                {isLogin ? 'Register' : 'Sign in'}
 
               </ToggleButton>
             </ToggleText>
@@ -395,10 +395,10 @@ useEffect(() =>{
             </IconWrapper>
             
             <Title>
-              Wyloguj się
+              Logout
             </Title>
             <Subtitle>
-              'Witaj ponownie! Wprowadź swoje dane.' 
+              'Hello again ! Enter your credencials.' 
             </Subtitle>
           </Header>
           <FormContent>
@@ -423,7 +423,7 @@ useEffect(() =>{
               onClick={_ => logoutUser()}
      
             >
-                Wyloguj się
+                Logout
             </SubmitButton>
             </FormContent>
           

@@ -9,4 +9,4 @@ COPY frontend/package.json frontend/package-lock.json* /bushing_register/fronten
 RUN npm ci --silent
 
 
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["npm", "run", "dev", "--", "--host", "--port", "5173"]
