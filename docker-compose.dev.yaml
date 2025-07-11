@@ -1,0 +1,47 @@
+services:
+  br_backend_dev:
+    container_name: br_backend_dev
+    restart: unless-stopped
+    image: br_backend_dev
+    build: 
+        context: ./backend
+        dockerfile: ./Dockerfile.dev
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/bushing_register/backend/
+      - br_media:/bushing_register/backend/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - br_database_psql_dev
+
+  br_frontend_dev: 
+    container_name: br_frontend_dev
+    restart: unless-stopped
+    image: br_frontend_dev
+    build: 
+        context: ./
+        dockerfile: ./frontend/Dockerfile.dev
+    ports:
+        - 5173:5173
+    volumes:
+        - ./frontend:/bushing_register/frontend/
+        - /bushing_register/frontend/node_modules # to avoid coping node_modules from windows !
+        - br_media:/bushing_register/media
+    depends_on: 
+        - br_backend_dev
+  
+  br_database_psql_dev:
+    image: postgres:16.2-alpine
+    restart: unless-stopped
+    container_name: br_database_psql_dev
+    volumes:
+      - br_postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.psql
+
+
+volumes:
+  br_media:
+  br_postgres_data:

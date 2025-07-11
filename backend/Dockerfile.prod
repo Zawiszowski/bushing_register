@@ -5,13 +5,14 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 WORKDIR /bushing_register/backend
 
-COPY requirements.txt /bushing_register/backend/
+COPY . /bushing_register/backend/
 RUN mkdir -p /bushing_register/backend/media
 
 RUN pip install --upgrade pip
 RUN pip install gunicorn
 RUN pip install -r requirements.txt
 
+RUN python manage.py collectstatic --no-input
 
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN chmod +x ./wsgi-entrypoint.sh
+ENTRYPOINT ./wsgi-entrypoint.sh

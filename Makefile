@@ -1,10 +1,10 @@
 .PHONY: build up down bash
-COMPOSE=docker compose -f docker-compose.yaml $(COMPOSE_OPTS)
+COMPOSE=docker compose -f docker-compose.dev.yaml $(COMPOSE_OPTS)
 COMPOSE_PROD=docker compose -f docker-compose.prod.yaml $(COMPOSE_OPTS)
 
 build:
-	$(COMPOSE) build br_backend
-	$(COMPOSE) build br_frontend
+	$(COMPOSE) build br_backend_dev
+	$(COMPOSE) build br_frontend_dev
 
 build-prod:
 	$(COMPOSE_PROD) build br_backend

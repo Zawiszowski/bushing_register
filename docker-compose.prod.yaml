@@ -5,7 +5,7 @@ services:
     image: ghcr.io/zawiszowski/bushing_register-br_backend:latest
     build: 
         context: backend
-        dockerfile: ./Dockerfile.dev
+        dockerfile: ./Dockerfile.prod
     env_file:
       - .env
     volumes:
