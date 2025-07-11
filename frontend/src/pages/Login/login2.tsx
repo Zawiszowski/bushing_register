@@ -6,7 +6,7 @@ import { Container, FormWrapper, FormContainer, Header, IconWrapper, Title, Subt
     ToggleButton, ToggleSection, ToggleText
  } from './login2.styles';
  import { useAuthContext } from '../../context/AuthContext';
-
+ import useDeboundce from '../../hooks/useDebounce';
  interface Error {
     email: string;
     password: string;
@@ -30,12 +30,13 @@ import { Container, FormWrapper, FormContainer, Header, IconWrapper, Title, Subt
  
 
 const AuthComponent = () => {
-    const {loginUser, logoutUser, registerUser, user, authError, created} = useAuthContext()
+  const {loginUser, logoutUser, registerUser, user, authError, created} = useAuthContext()
 
-    const [isLogin, setIsLogin] = useState<boolean>(true);
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-    const [formData, setFormData] = useState(defaultFormData);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [formData, setFormData] = useState(defaultFormData);
+  const useDebounceValidate = useDeboundce(formData, 2000)
   const [errors, setErrors] = useState<Error>(defaultError);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -49,6 +50,14 @@ useEffect(() =>{
     setIsLogin(true)
 
   },[created])
+
+  useEffect(()=>{
+    if(useDebounceValidate === defaultFormData) return
+
+    const newErrors = validateForm()
+    setErrors(newErrors)
+
+  },[useDebounceValidate])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,32 +76,31 @@ useEffect(() =>{
   };
 
   const validateForm = () => {
-    const newErrors:Error = defaultError;
-
+    const newErrors:Error = {...defaultError};
     if (!isLogin && !formData.name.trim()) {
-      newErrors.name = 'Imię jest wymagane';
+      newErrors.name = 'Name is required';
     }
 
     if (!isLogin && !formData.surename.trim()) {
-      newErrors.surename = 'Nazwisko jest wymagane';
+      newErrors.surename = 'Surename is required';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email jest wymagany';
+      newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email jest nieprawidłowy';
+      newErrors.email = 'Email is invalid';
     }
 
     if (!formData.password) {
-      newErrors.password = 'Hasło jest wymagane';
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Hasło musi mieć co najmniej 6 znaków';
+      newErrors.password = 'Password must be at least 6 characters long';
     }
 
     if (!isLogin && !formData.confirmPassword) {
-      newErrors.confirmPassword = 'Potwierdzenie hasła jest wymagane';
+      newErrors.confirmPassword = 'Password confirmation is required';
     } else if (!isLogin && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Hasła nie są identyczne';
+      newErrors.confirmPassword = 'The passwords are not identical';
     }
 
     newErrors.errorCount = 0
@@ -130,35 +138,6 @@ useEffect(() =>{
 
     
     
-    
-    // Symulacja API call
-    // setTimeout(() => {
-    //   try {
-    //     if (isLogin) {
-    //       console.log('Logowanie:', { email: formData.email, password: formData.password });
-    //       alert('Pomyślnie zalogowano!');
-    //     } else {
-    //       console.log('Rejestracja:', { 
-    //         name: formData.name, 
-    //         email: formData.email, 
-    //         password: formData.password 
-    //       });
-    //       alert('Pomyślnie zarejestrowano!');
-    //     }
-        
-    //     // Reset formularza
-    //     setFormData({
-    //       name: '',
-    //       email: '',
-    //       password: '',
-    //       confirmPassword: ''
-    //     });
-    //   } catch (error) {
-    //     alert('Wystąpił błąd. Spróbuj ponownie.');
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // }, 2000);
   };
 
   const toggleMode = () => {
@@ -170,13 +149,6 @@ useEffect(() =>{
 
   return (
     <Container>
-      {/* <BackgroundOverlay /> */}
-      
-      {/* <BackgroundContainer>
-        <AnimatedCircle />
-        <AnimatedCircle />
-        <AnimatedCircle />
-      </BackgroundContainer> */}
 
       <FormWrapper>
         <FormContainer>
@@ -206,7 +178,7 @@ useEffect(() =>{
             {/* Imię - tylko przy rejestracji */}
             {!isLogin && (
               <FieldGroup>
-                <Label>Imię</Label>
+                <Label>Name</Label>
                 <InputWrapper>
                   <IconLeft>
                     <User size={20} />
@@ -216,7 +188,7 @@ useEffect(() =>{
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Wprowadź swoje imię"
+                    placeholder="Enter your name"
                     hasError={!!errors.name}
                     hasRightIcon={false}
                   />
@@ -229,7 +201,7 @@ useEffect(() =>{
             {/* nazwisko - tylko przy rejestracji */}
             {!isLogin && (
               <FieldGroup>
-                <Label>Nazwisko</Label>
+                <Label>Surename</Label>
                 <InputWrapper>
                   <IconLeft>
                     <User size={20} />
@@ -239,7 +211,7 @@ useEffect(() =>{
                     name="surename"
                     value={formData.surename}
                     onChange={handleInputChange}
-                    placeholder="Wprowadź swoje nazwisko"
+                    placeholder="Enter your surname"
                     hasError={!!errors.surename}
                     hasRightIcon={false}
                   />
@@ -262,7 +234,7 @@ useEffect(() =>{
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="wprowadz@email.com"
+                  placeholder="your@email.com"
                   hasError={errors.email !== "" ? true:false}
                   hasRightIcon={false}
                 />
@@ -274,7 +246,7 @@ useEffect(() =>{
 
             {/* Hasło */}
             <FieldGroup>
-              <Label>Hasło</Label>
+              <Label>Password</Label>
               <InputWrapper>
                 <IconLeft>
                   <Lock size={20} />
@@ -284,7 +256,7 @@ useEffect(() =>{
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="Wprowadź hasło"
+                  placeholder="Enter password"
                   hasError={errors.password !== "" ? true:false}
                   hasRightIcon={true}
                 />
@@ -307,7 +279,7 @@ useEffect(() =>{
             {/* Potwierdzenie hasła - tylko przy rejestracji */}
             {!isLogin && (
               <FieldGroup>
-                <Label>Potwierdź hasło</Label>
+                <Label>Confirm password</Label>
                 <InputWrapper>
                   <IconLeft>
                     <Lock size={20} />
@@ -317,7 +289,7 @@ useEffect(() =>{
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    placeholder="Potwierdź hasło"
+                    placeholder="Confirm password"
                     hasError={errors.confirmPassword !== "" ? true:false}
                     hasRightIcon={true}
                   />
@@ -347,7 +319,7 @@ useEffect(() =>{
               {isLoading ? (
                 <LoadingWrapper>
                   <Spinner />
-                  {isLogin ? 'Logowanie...' : 'Rejestracja...'}
+                  {isLogin ? 'Logging in...' : 'Registration in progress...'}
                 </LoadingWrapper>
               ) : (
                 isLogin ? 'Sign in' : 'Register'
@@ -368,7 +340,7 @@ useEffect(() =>{
           {isLogin && (
             <ForgotPassword>
               <ForgotPasswordLink type="button">
-                Zapomniałeś hasła?
+                Forgot your password?
               </ForgotPasswordLink>
             </ForgotPassword>
           )}
@@ -376,7 +348,7 @@ useEffect(() =>{
           {/* Toggle Mode */}
           <ToggleSection>
             <ToggleText>
-              {isLogin ? 'Nie masz konta?' : 'Masz już konto?'}
+              {isLogin ? "Don't have the account?" : "Already have the account?"}
               <ToggleButton
                 type="button"
                 onClick={toggleMode}
