@@ -22,9 +22,8 @@ class UserResetPasswordConfirmerializer(serializers.Serializer):
             raise serializers.ValidationError({"password": "Passwords are not the same."})
         return attrs
     
-class UserRegisterSerializer(serializers.Serializer):
+class UserRegisterSerializer(serializers.ModelSerializer):
 
-    email = serializers.EmailField()
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
 

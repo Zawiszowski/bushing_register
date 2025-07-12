@@ -8,6 +8,24 @@ from django.contrib.auth.tokens import default_token_generator
 
 User = get_user_model()
 
+class CreateUserTest(APITestCase):
+    def setUp(self):
+        self.data = {
+            'email': 'test@example.com',
+            'password': 'StrongPass123',
+            'first_name': 'Test',
+            'last_name': 'User'
+        }
+        self.user = User.objects.create_user(
+            email=self.data['email'],
+            password=self.data['password'],
+            first_name=self.data['first_name'],
+            last_name=self.data['last_name']
+        )
+    
+    def test_user_create(self):
+        self.assertEqual(self.user.first_name, self.data['first_name'])
+
 class RegistrationTests(APITestCase):
     def setUp(self):
         self.register_url = reverse('register')
@@ -27,6 +45,7 @@ class RegistrationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         user = User.objects.get(email='test@example.com')
         self.assertFalse(user.is_active)
+        self.assertEqual(user.first_name, data['first_name'])
 
     def test_password_mismatch(self):
         """
