@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Account Acctivation</title>
+    <style>
+      body {
+        background-color: #f4f4f4;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .email-container {
+        max-width: 600px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+
+      .email-header {
+        background-color: #007bff;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .email-header img {
+        max-width: 150px;
+      }
+
+      .email-body {
+        padding: 30px;
+      }
+
+      .email-body h2 {
+        color: #333333;
+      }
+
+      .email-body p {
+        color: #555555;
+        line-height: 1.5;
+      }
+
+      .button {
+        display: inline-block;
+        background-color: #007bff;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+      .titleSteve {
+        color: #ffffff ;
+        text-decoration: none;
+
+      }
+
+      .email-footer {
+        background-color: #f4f4f4;
+        text-align: center;
+        padding: 20px;
+        font-size: 12px;
+        color: #999999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="email-header">
+        <div>
+        <img src="http:127.0.0.1:8000/django_static/img/steve.png" alt="Twoje Logo">
+  
+        <h1 class="titleSteve">stevesteeve</h1>
+        </div>
+      </div>
+      <div class="email-body">
+        <h2>Cześć {{user.first_name}} !</h2>
+        <p>
+          Otrzymaliśmy prośbę o stworzenie konta w naszym serwisie. Jeśli to Ty ją wysłałeś, kliknij przycisk poniżej, aby aktywować konto:
+        </p>
+        <p style="text-align: center;">
+          <a href="{{ activation_link }}" class="button">Aktywuj</a>
+        </p>
+        <p>
+          Jeśli to nie Ty zainicjowałeś tę prośbę, po prostu zignoruj tego maila – lub skontaktuj się z: support@slevesteeve.dev.
+        </p>
+      </div>
+      <div class="email-footer">
+        &copy; 2025 stevesleeve. Wszelkie prawa zastrzeżone.<br>
+        Nie odpowiadaj na tego maila – to wiadomość automatyczna.
+      </div>
+    </div>
+  </body>
+</html>

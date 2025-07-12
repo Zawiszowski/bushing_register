@@ -1,6 +1,6 @@
 from typing import Any
 from django.contrib.auth import get_user_model, login, logout
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response 
@@ -13,6 +13,9 @@ from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
+from django.template.loader import render_to_string
+from django.template import loader
+
 
 
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -73,6 +76,19 @@ class UserResetPasswordConfirm(APIView):
 
         return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
 
+def send_activate_account(user, activation_link):
+    subject='Activate your account'
+    from_email = settings.DEFAULT_FROM_EMAIL
+    to = [user.email]
+    text_content=f'Click the link to activate your account:\n\n {activation_link}'
+
+    html_content = render_to_string('mail_activate.html', {
+        'activation_link': activation_link,
+        'user': user,
+    })
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
 
 class UserRegister(APIView):
 
@@ -93,16 +109,13 @@ class UserRegister(APIView):
 
             # Build activation link
             domain = get_current_site(request).domain
-            activation_link = f"http://{domain}{reverse('activate', kwargs={'uidb64': uid, 'token': token})}"
+            if settings.DEBUG:
+                domain = 'localhost:5173'
+            # activation_link = f"http://{domain}{reverse('activate', kwargs={'uidb64': uid, 'token': token})}"
+            activation_link = f"http://{domain}/front-activate/{uid}/{token}/"
 
             # Send activation email
-            send_mail(
-                subject='Activate your account',
-                message=f'Click the link to activate your account:\n\n {activation_link}',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=False,
-            )
+            send_activate_account(user, activation_link)
 
             return Response(
                 {'message': 'Registration successful. Please check your email to activate your account.'},
