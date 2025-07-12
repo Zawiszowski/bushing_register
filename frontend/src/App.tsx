@@ -11,6 +11,8 @@ import BushingRegister from './pages/Register/register';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import StiffnesCalculator from './pages/StiffnessCalculator/stiffnesCalculator';
 import { ToastContainer } from 'react-toastify';
+import Activate from './pages/Login/login_activate';
+import PasswordReset from './pages/Login/password_reset';
 
 function App(){
 
@@ -42,6 +44,8 @@ function App(){
               <Route path='/register' element={<BushingRegister></BushingRegister>}></Route>
               <Route path='/calculator' element={<StiffnesCalculator></StiffnesCalculator>}></Route>
               <Route path='/login' element={<AuthComponent></AuthComponent>}></Route>
+              <Route path="/front-activate/:uid/:token" element={<Activate />} />
+              <Route path="/password-reset" element={<PasswordReset />} />
 
             </Routes>
           </AuthProvider>

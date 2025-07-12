@@ -7,6 +7,7 @@ import { Container, FormWrapper, FormContainer, Header, IconWrapper, Title, Subt
  } from './login2.styles';
  import { useAuthContext } from '../../context/AuthContext';
  import useDeboundce from '../../hooks/useDebounce';
+ import { useNavigate } from 'react-router-dom';
  interface Error {
     email: string;
     password: string;
@@ -40,6 +41,7 @@ const AuthComponent = () => {
   const [errors, setErrors] = useState<Error>(defaultError);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const navigate = useNavigate()
 useEffect(() =>{
     setIsLoading(false)
     
@@ -339,7 +341,7 @@ useEffect(() =>{
           {/* Zapomniałeś hasła - tylko przy logowaniu */}
           {isLogin && (
             <ForgotPassword>
-              <ForgotPasswordLink type="button">
+              <ForgotPasswordLink type="button" onClick={() => navigate('/password-reset')}>
                 Forgot your password?
               </ForgotPasswordLink>
             </ForgotPassword>

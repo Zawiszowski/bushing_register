@@ -2,12 +2,13 @@ import styled from "styled-components";
 import { pulse, spin, fadeInUp } from "../../styles/animation";
 
 export const Container = styled.div`
-  min-height: 100vh;
+  min-height: 70vh;
+  margin: 4rem 0 4rem 0 ;
   /* background: linear-gradient(135deg, #581c87 0%, #1e3a8a 50%, #312e81 100%); */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 4rem 0.5rem 4rem 0.5rem ;
   position: relative;
   overflow: hidden;
   animation: ${fadeInUp} 1s ease-out;
@@ -86,6 +87,18 @@ export const IconWrapper = styled.div`
   background: linear-gradient(45deg,rgb(188, 216, 243),rgb(34, 101, 184));
   border-radius: 50%;
   margin-bottom: 1rem;
+`;
+
+export const IconWrapperWait = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(45deg,rgb(188, 216, 243),rgb(34, 101, 184));
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  animation: ${pulse} 2s ease-in-out infinite;
 `;
 
 export const Title = styled.h2`
