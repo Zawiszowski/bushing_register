@@ -1,10 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pl">
-    <div>
-        <img src="http:127.0.0.1:8000/django_static/img/steve.png" alt="Twoje Logo">
-        <p class="titleSteve">slevesteeve</p>
-    </div>
+
 <head>
     <meta charset="UTF-8">
     <title>Polityka Prywatności i Regulamin</title>
@@ -20,9 +17,17 @@
         h1, h2 {
             color: #0055a5;
         }
+        .div-logo {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
+    <div class="div-logo">
+        <img src="{% static 'img/steve.png' %}" alt="Twoje Logo">
+        <h1 class="titleSteve">stevesleeve</h1>
+    </div>
 
     <h1>Polityka Prywatności</h1>
 

@@ -66,13 +66,17 @@
         font-size: 12px;
         color: #999999;
       }
+      .div-logo {
+          display: flex;
+          align-items: center;
+      }
     </style>
   </head>
   <body>
     <div class="email-container">
       <div class="email-header">
-        <div>
-        <img src="http:127.0.0.1:8000/django_static/img/steve.png" alt="Twoje Logo">
+        <div class="div-logo">
+        <img src="{{ logo_url }}" alt="Logo">
   
         <h1 class="titleSteve">stevesteeve</h1>
         </div>

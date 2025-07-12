@@ -8,7 +8,7 @@ from rest_framework import permissions, status
 from .models import CustomUser
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
@@ -76,13 +76,15 @@ class UserResetPasswordConfirm(APIView):
 
         return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
 
-def send_activate_account(user, activation_link):
+def send_activate_account(logo_url, user, activation_link):
     subject='Activate your account'
     from_email = settings.DEFAULT_FROM_EMAIL
     to = [user.email]
-    text_content=f'Click the link to activate your account:\n\n {activation_link}'
+    text_content=''
+    
 
     html_content = render_to_string('mail_activate.html', {
+        'logo_url': logo_url,
         'activation_link': activation_link,
         'user': user,
     })
@@ -112,10 +114,11 @@ class UserRegister(APIView):
             if settings.DEBUG:
                 domain = 'localhost:5173'
             # activation_link = f"http://{domain}{reverse('activate', kwargs={'uidb64': uid, 'token': token})}"
-            activation_link = f"http://{domain}/front-activate/{uid}/{token}/"
+            activation_link = f"https://{domain}/front-activate/{uid}/{token}/"
+            logo_url = f"https://{domain}/django_static/img/steve.png/"
 
             # Send activation email
-            send_activate_account(user, activation_link)
+            send_activate_account(logo_url, user, activation_link)
 
             return Response(
                 {'message': 'Registration successful. Please check your email to activate your account.'},
@@ -182,3 +185,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     # permission_classes = [permissions.AllowAny,]
     # authentication_classes = (SessionAuthentication,)
     serializer_class = MyTokenObtainPairSerializer
+
+def regulations(request):
+    return render(request, 'regulations.html')
