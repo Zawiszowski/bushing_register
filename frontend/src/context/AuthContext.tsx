@@ -155,7 +155,9 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
         let thirteen: number = 1000 * 60 * 6
         if(loading){
             setLoading(false)
-            updateToken()
+                if(authTokens.refresh !== defaultAuthTokens.refresh){
+                    updateToken()
+                }
             setAuthError({error:'', detail: []})
 
         }else{
