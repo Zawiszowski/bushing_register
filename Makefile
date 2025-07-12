@@ -17,7 +17,7 @@ down:
 	$(COMPOSE) down --rmi all --volumes --remove-orphans
 
 bash:
-	$(COMPOSE) exec br_backend bash
+	$(COMPOSE) exec br_backend_dev bash
 
 remove-image:
 	docker rmi -f $(image_id)
