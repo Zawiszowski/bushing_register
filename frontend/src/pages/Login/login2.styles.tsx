@@ -233,7 +233,7 @@ export const ForgotPassword = styled.div`
 `;
 
 export const ForgotPasswordLink = styled.button`
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #d1d5db;
   background: none;
   border: none;

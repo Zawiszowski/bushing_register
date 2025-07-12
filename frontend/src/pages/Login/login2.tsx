@@ -355,11 +355,22 @@ useEffect(() =>{
                 type="button"
                 onClick={toggleMode}
               >
-                {isLogin ? 'Register' : 'Sign in'}
+                {isLogin ? 'Register' : 'Sign in\n'}
 
               </ToggleButton>
+              
+
             </ToggleText>
           </ToggleSection>
+          {/* Regulations and private policy */}
+          {/* {!isLogin && ( */}
+            <ForgotPassword>
+              <ForgotPasswordLink style={{fontSize: '0.875rem'}} type="button" onClick={() => navigate('/user_api/regulations/')}>
+                Creating account you accept <u style={{color: 'black'}}>Privacy Policy and Regulations</u>
+              </ForgotPasswordLink>
+            </ForgotPassword>
+           {/* )} */}
+          {/* {isLogin ? null : ''} */}
           </>):
           (<>
             <Header>
