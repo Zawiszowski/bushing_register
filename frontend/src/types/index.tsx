@@ -66,6 +66,11 @@ export interface SocialLinkData {
   label: string;
 }
 
+export interface ContactData {
+  icon: IconType;
+  text: string;
+}
+
 export interface ProductLink {
   href: string;
   text: string;
