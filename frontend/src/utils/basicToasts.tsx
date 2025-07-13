@@ -14,7 +14,7 @@ toast.success(`Success! ${success}`, {
 })}
 
 export const notify_error = (error:string) => {
-toast.error(`error ${error}`, {
+toast.error(`Error! ${error}`, {
     position: "top-right",
     autoClose: 2000,
     hideProgressBar: false,

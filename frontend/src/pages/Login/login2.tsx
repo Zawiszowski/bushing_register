@@ -8,6 +8,7 @@ import { Container, FormWrapper, FormContainer, Header, IconWrapper, Title, Subt
  import { useAuthContext } from '../../context/AuthContext';
  import useDeboundce from '../../hooks/useDebounce';
  import { useNavigate } from 'react-router-dom';
+ import { DRF_ADRESS } from '../../data/constants';
  interface Error {
     email: string;
     password: string;
@@ -46,7 +47,6 @@ useEffect(() =>{
     setIsLoading(false)
     
   },[authError])
-
   useEffect(() =>{
     setIsLoading(false)
     setIsLogin(true)
@@ -327,13 +327,11 @@ useEffect(() =>{
                 isLogin ? 'Sign in' : 'Register'
               )}
             </SubmitButton>
-            {authError && (
+            {authError.error !== '' && (
                 <>
-                {Object.entries(authError.detail).map( ([_, value]) => (
-                    <ErrorMessage>{value}</ErrorMessage>
-                ))
                 
-                }
+                  <ErrorMessage>Something went wrong during the process</ErrorMessage>
+              
                 </>
             )}
           </FormContent>
@@ -365,7 +363,7 @@ useEffect(() =>{
           {/* Regulations and private policy */}
           {/* {!isLogin && ( */}
             <ForgotPassword>
-              <ForgotPasswordLink style={{fontSize: '0.875rem'}} type="button" onClick={() => navigate('/user_api/regulations/')}>
+              <ForgotPasswordLink style={{fontSize: '0.875rem'}} type="button" onClick={() => window.open(`${DRF_ADRESS}/user_api/regulations/`, '_blank')}>
                 Creating account you accept <u style={{color: 'black'}}>Privacy Policy and Regulations</u>
               </ForgotPasswordLink>
             </ForgotPassword>
