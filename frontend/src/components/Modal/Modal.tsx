@@ -405,7 +405,9 @@ const CustomModal = (props : Props) => {
                         </div>
                     
                         <div className='col'>
-                        <FormGroup >
+                        <FormGroup
+
+                        >
                         <Label for="photos">Photo files</Label>
                         <Input
                             valid={!readOnly && validate.photos}
@@ -413,9 +415,10 @@ const CustomModal = (props : Props) => {
                             type="file"
                             multiple={true}
                             name="photos"
-                            style={{display: readOnly ? 'none': 'block'}}
                             onChange={handleChange}
                             placeholder="Enter photos"
+                            style={{display: readOnly ? 'none': 'block'}}
+
                         />
                         <FormFeedback 
                             valid={!readOnly && validate.photos}
@@ -429,7 +432,10 @@ const CustomModal = (props : Props) => {
                         
 
                         
-                        <FormGroup>
+                        <FormGroup
+                            style={{display: readOnly ? 'none': 'block'}}
+
+                        >
                         <Label  for="stiffness_map">Stiffness map</Label>
                         <Input
                             id='TooltipExample'

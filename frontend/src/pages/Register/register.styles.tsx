@@ -104,16 +104,16 @@ export const SpanWrapper = styled.div`
 
 `
 export const Span = styled.span`
-    padding: 8px;
+    padding: 0.75rem;
     /* border: 2px, solid #727878; */
     background-color: rgb(212, 212, 212);
-    border-radius: 10px;
+    border-radius: 15px;
 
     
     cursor:pointer;
 
     &.active {
-      padding: 8px;
+      padding: 0.75rem;
       background-color: #727878;
       color:white;
     }
