@@ -1,5 +1,5 @@
 import React from 'react';
-import { FooterContainer, FooterLink, Container, ContentSection, ContactItem, SocialLink, SocialLinks, SocialSection, SocialText, Row, Column, SectionTitle, Logo, Description,
+import { FooterContainer, FooterLink, Container, ContentSection, SocialLink, SocialLinks, SocialSection, SocialText, Row, Column, SectionTitle, Logo, Description,
   LinkItem, IconWrapper, Copyright, ContactText } from './Footer.styles';
 import type { SocialLinkData, ProductLink, UsefulLink, ContactData} from '../../types';
 import _logo from '../../assets/blue_steve.png';
@@ -175,23 +175,6 @@ const Footer: React.FC = () => {
                 </LinkItem>
               ))}
 
-              {/* <ContactItem>
-                <Icon marginRight="0.5rem"><FaHome></FaHome></Icon>
-                
-                Katowice
-              </ContactItem>
-              <ContactItem>
-                <Icon className="fas fa-envelope" marginRight="0.75rem" />
-                support@stevesleeve.dev
-              </ContactItem>
-              <ContactItem>
-                <Icon className="fas fa-phone" marginRight="0.75rem" />
-                + 48 000 000 000
-              </ContactItem>
-              <ContactItem>
-                <Icon className="fas fa-print" marginRight="0.75rem" />
-                + 48 000 000 000
-              </ContactItem> */}
             </Column>
           </Row>
         </Container>

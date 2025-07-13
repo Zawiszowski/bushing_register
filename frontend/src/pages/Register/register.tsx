@@ -594,7 +594,7 @@ const BushingRegister = () => {
             <a style={{fontSize: '20px'}}>Welcome to the Bushing List!</a><br/>
             <hr></hr>
 
-            Here you will find a comprehensive selection of bushings for shock absorbers, designed to enhance your vehicle's performance and comfort. <br/>
+            Here you will find a comprehensive selection of bushings for car's suspension, designed to enhance your vehicle's performance and comfort. <br/>
             Browse through our list to find the perfect fit for your needs.<br/>
             This is a complete overview of our bushings, where we track stiffness, location, and condition using photos.
 
