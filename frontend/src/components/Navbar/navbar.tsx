@@ -9,6 +9,7 @@ import {
     Logo,
 
     MobileIcon,
+    BrandName
 
 }
 
@@ -41,10 +42,12 @@ const Navbar = () => {
     return (
       <>
         <Nav>
-            <div style={{fontSize: "30px"}}>
+         
+            <div >
             <Logo></Logo>
-            stevesleeve
+            <BrandName>stevesleeve</BrandName>
             </div>
+         
               
             <MobileIcon onClick={toggleMenu}>
 

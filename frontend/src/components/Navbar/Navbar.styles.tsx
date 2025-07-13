@@ -11,7 +11,7 @@ export const Logo = styled.img.attrs({
   width: 90px;
   height: 90px;
   margin: 2px;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 877px) {
     margin-left: 4rem;
   }
 
@@ -82,7 +82,7 @@ export const NavMenu = styled.div<{ isOpen: boolean }>`
 
   display: flex;
   align-items: center;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 877px) {
     display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
     position: absolute;
     top: 90px;
@@ -95,6 +95,13 @@ export const NavMenu = styled.div<{ isOpen: boolean }>`
   }
 
 `;
+
+export const BrandName = styled.span`
+  font-size: 1.875rem;
+  @media screen and (max-width: 430px) {
+    display: none;
+  }
+`
   
 export const NavBtn = styled.nav`
   font-size: medium;
@@ -138,7 +145,7 @@ export const NavBtnLink = styled(NavLink)`
 
 export const MobileIcon = styled.div`
   display: none;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 877px) {
     display: block;
     position: absolute;
     /* top: 0; */
