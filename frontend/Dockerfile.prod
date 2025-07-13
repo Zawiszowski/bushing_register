@@ -9,7 +9,7 @@ COPY frontend /bushing_register/frontend/
 RUN npm ci --silent
 RUN npm run build
 
-from bushing_register-br_backend as backend
+from ghcr.io/zawiszowski/bushing_register-br_backend as backend
 #second stage - copy react/django static and start nginx
 FROM nginx:stable
 COPY --from=build /bushing_register/frontend/dist /bushing_register/client

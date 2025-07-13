@@ -6,6 +6,7 @@ services:
     build: 
         context: backend
         dockerfile: ./Dockerfile.prod
+    platform: linux/arm64
     env_file:
       - .env
     volumes:
@@ -20,6 +21,7 @@ services:
     build: 
         context: ./
         dockerfile: ./frontend/Dockerfile.prod
+    platform: linux/arm64
     ports:
         - 80:80
     volumes:

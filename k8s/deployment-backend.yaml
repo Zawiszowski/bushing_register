@@ -23,6 +23,8 @@ spec:
         volumeMounts:
           - name: br-media
             mountPath: /bushing_register/backend/media
+      imagePullSecrets:
+      - name: ghcr-secret
       volumes:
         - name: br-media
           persistentVolumeClaim:

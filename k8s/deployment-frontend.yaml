@@ -18,6 +18,8 @@ spec:
         volumeMounts:
           - name: br-media
             mountPath: /bushing_register/media
+      imagePullSecrets:
+      - name: ghcr-secret
 
         
       volumes:
