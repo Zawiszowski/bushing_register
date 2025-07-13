@@ -27,7 +27,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='insecure-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default="False")
+DEBUG = False
+
+DEBUG_DICT = {
+    'false': False,
+    'true': True,
+}
+if config('DEBUG').casefold() in DEBUG_DICT.keys():
+    DEBUG = DEBUG_DICT[config('DEBUG').casefold()]
+
+
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=lambda v: [s.strip() for s in v.split(',')])
 
