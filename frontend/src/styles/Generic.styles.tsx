@@ -110,6 +110,7 @@ export const Context = styled.main`
 `;
 
 export const AddBtn = styled(Button)`
+margin-block: 1rem;
 padding: 0.5rem 2rem;
 border-radius: 10px;
 color: black;
@@ -132,3 +133,52 @@ color: black;
   background:rgb(226, 155, 143);
 
 `
+
+
+export const RowBoot = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -15px;
+  margin-right: -15px;
+`;
+
+export const ColBoot = styled.div<{ xs?: number, sm?: number, md?: number, lg?: number}>`
+  padding-left: 15px;
+  padding-right: 15px;
+  flex: 0 0 auto;
+  width: 100%;
+
+  ${(props) =>
+    props.xs &&
+    `
+      flex: 0 0 ${(100 * props.xs) / 12}%;
+      max-width: ${(100 * props.xs) / 12}%;
+    `}
+
+  @media (min-width: 576px) {
+    ${(props) =>
+      props.sm &&
+      `
+        flex: 0 0 ${(100 * props.sm) / 12}%;
+        max-width: ${(100 * props.sm) / 12}%;
+      `}
+  }
+
+  @media (min-width: 768px) {
+    ${(props) =>
+      props.md &&
+      `
+        flex: 0 0 ${(100 * props.md) / 12}%;
+        max-width: ${(100 * props.md) / 12}%;
+      `}
+  }
+
+  @media (min-width: 992px) {
+    ${(props) =>
+      props.lg &&
+      `
+        flex: 0 0 ${(100 * props.lg) / 12}%;
+        max-width: ${(100 * props.lg) / 12}%;
+      `}
+  }
+`;

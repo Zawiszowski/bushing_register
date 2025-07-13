@@ -92,6 +92,17 @@ export const DeleteTM = styled(EditTM)`
   }
 
 `
+
+export const SpanWrapper = styled.div`
+  margin: 2rem;
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 470px) {
+    flex-direction: column;
+  }
+
+`
 export const Span = styled.span`
     padding: 8px;
     /* border: 2px, solid #727878; */

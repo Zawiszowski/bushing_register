@@ -98,7 +98,7 @@ export const NavMenu = styled.div<{ isOpen: boolean }>`
 
 export const BrandName = styled.span`
   font-size: 1.875rem;
-  @media screen and (max-width: 430px) {
+  @media screen and (max-width: 455px) {
     display: none;
   }
 `

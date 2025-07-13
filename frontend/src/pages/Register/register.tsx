@@ -12,6 +12,7 @@ import {
     InnerContainer,
     WrapperContainer,
     RegisterSection,
+    SpanWrapper,
     
 }from './register.styles.tsx'; 
 
@@ -150,24 +151,24 @@ const BushingRegister = () => {
   
     let renderTabList = () => {
       return (
+  
+          <SpanWrapper>
 
-          <div className='row d-flex' style={{margin: '2rem'}}>
-
-            <div className='col' > 
+            <div className='col' style={{marginBlock: '1rem'}} > 
               <Span
                   onClick={() => displayCompleted('o_use')}
                   className={viewSelector ==='o_use' ? "active" : "" }>
                   OUT OF USE
               </Span>
             </div>
-            <div className='col '> 
+            <div className='col ' style={{marginBlock: '1rem'}}> 
               <Span
                   onClick={() => displayCompleted('i_use')}
                   className={viewSelector ==='i_use' ? "active" : "" }>
                   IN USE
               </Span>
             </div>
-            <div className='col' > 
+            <div className='col' style={{marginBlock: '1rem'}}> 
               <Span
                   onClick={() => displayCompleted('warehouse')}
                   className={viewSelector === 'warehouse' ? "active": ""}>
@@ -175,7 +176,8 @@ const BushingRegister = () => {
               </Span>
             </div>
 
-          </div>
+          </SpanWrapper>
+  
         
   
 
@@ -623,8 +625,8 @@ const BushingRegister = () => {
        
 
            
-            
-            {renderTabList()}
+            <div>
+            {renderTabList()}</div>
 
             <hr style={{marginBlock: '3rem'}}></hr>
             
