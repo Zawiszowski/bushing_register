@@ -27,20 +27,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='insecure-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+debug = config('DEBUG', default='False').casefold()
 DEBUG = False
-
 DEBUG_DICT = {
     'false': False,
     'true': True,
 }
-if config('DEBUG').casefold() in DEBUG_DICT.keys():
-    DEBUG = DEBUG_DICT[config('DEBUG').casefold()]
+if debug in DEBUG_DICT.keys():
+    DEBUG = DEBUG_DICT[debug]
 
 
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=lambda v: [s.strip() for s in v.split(',')])
 
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [

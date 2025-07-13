@@ -1,4 +1,17 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: br-media-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/lib/rancher/k3s/storage/media"
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: br-media-pvc
@@ -8,6 +21,19 @@ spec:
   resources:
     requests:
       storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: br-postgres-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/lib/rancher/k3s/storage/postgres_db"
+  persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

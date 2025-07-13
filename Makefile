@@ -7,8 +7,13 @@ build:
 	$(COMPOSE) build br_frontend_dev
 
 build-prod:
+	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 	$(COMPOSE_PROD) build br_backend
 	$(COMPOSE_PROD) build br_frontend
+
+push-prod:
+	docker push ghcr.io/zawiszowski/bushing_register-br_backend:latest
+	docker push ghcr.io/zawiszowski/bushing_register-br_frontend:latest
 
 up:
 	$(COMPOSE) up 
