@@ -1,9 +1,9 @@
 import React from 'react';
 import { FooterContainer, FooterLink, Container, ContentSection, ContactItem, SocialLink, SocialLinks, SocialSection, SocialText, Row, Column, SectionTitle, Logo, Description,
-  LinkItem, Icon, Copyright } from './Footer.styles';
-import type { SocialLinkData, ProductLink, UsefulLink } from '../../types';
+  LinkItem, IconWrapper, Copyright, ContactText } from './Footer.styles';
+import type { SocialLinkData, ProductLink, UsefulLink, ContactData} from '../../types';
 import _logo from '../../assets/blue_steve.png';
-import { FaFacebook, FaTwitter, FaGoogle, FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaGoogle, FaGithub, FaLinkedin, FaHome, FaMailBulk, FaPhone  } from 'react-icons/fa';
 
 // Component
 const Footer: React.FC = () => {
@@ -72,6 +72,26 @@ const Footer: React.FC = () => {
       text: 'IT Request'
     }
   ];
+
+  const contactData: ContactData[] = [
+    {
+      icon: FaHome,
+      text: 'Katowice'
+    },
+    {
+      icon: FaMailBulk,
+      text: 'support@stevesleeve'
+    },
+    {
+      icon: FaPhone,
+      text: '+ 48 000 000 000'
+    },
+    {
+      icon: FaPhone,
+      text: '+ 48 000 000 000'
+    },
+
+  ]
 
   return (
     <FooterContainer>
@@ -143,13 +163,26 @@ const Footer: React.FC = () => {
 
             <Column md={4} lg={3} xl={3}>
               <SectionTitle>Contact</SectionTitle>
-              <ContactItem>
-                <Icon className="fas fa-home" marginRight="0.5rem" />
+              {contactData.map((link, index) => (
+                <LinkItem key={index}>
+                  <IconWrapper><link.icon></link.icon></IconWrapper>
+                  <ContactText
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.text}
+                  </ContactText>
+                </LinkItem>
+              ))}
+
+              {/* <ContactItem>
+                <Icon marginRight="0.5rem"><FaHome></FaHome></Icon>
+                
                 Katowice
               </ContactItem>
               <ContactItem>
                 <Icon className="fas fa-envelope" marginRight="0.75rem" />
-                https://zawiszowski.github.io/portfolio/
+                support@stevesleeve.dev
               </ContactItem>
               <ContactItem>
                 <Icon className="fas fa-phone" marginRight="0.75rem" />
@@ -158,7 +191,7 @@ const Footer: React.FC = () => {
               <ContactItem>
                 <Icon className="fas fa-print" marginRight="0.75rem" />
                 + 48 000 000 000
-              </ContactItem>
+              </ContactItem> */}
             </Column>
           </Row>
         </Container>

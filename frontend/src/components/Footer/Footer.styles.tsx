@@ -50,6 +50,16 @@ export const SocialLink = styled.a`
   }
 `;
 
+export const ContactText = styled.a`
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  /* &:hover {
+    color: #f8f9fa;
+  } */
+`;
+
 export const ContentSection = styled.section`
   padding: 0;
 `;
@@ -140,7 +150,7 @@ export const ContactItem = styled.p`
   margin-bottom: 0.75rem;
 `;
 
-export const Icon = styled.i<{ marginRight?: string }>`
+export const IconWrapper = styled.i<{ marginRight?: string }>`
   color: #f8f9fa;
   margin-right: ${props => props.marginRight || '0.5rem'};
   width: 16px;
