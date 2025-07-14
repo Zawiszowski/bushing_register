@@ -5,5 +5,5 @@ npm-debug.log
 logs
 .env
 .env.psql
-
+*.sql
 yarn-error.log

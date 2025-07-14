@@ -4,3 +4,4 @@ env
 .env.psql
 .xlsx
 /media
+*.sql

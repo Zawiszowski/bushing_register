@@ -5,4 +5,5 @@ __init__.py
 .env.psql
 secrets.yaml
 *.sqlite3
+*.sql
 /backend/media
