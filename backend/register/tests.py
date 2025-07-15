@@ -2,15 +2,32 @@ from django.test import TestCase
 from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, AbstractBaseUser
+from django.db import models
 
 from django.contrib.contenttypes.models import ContentType
-from register.models import ClientModel
+from register.models import ClientModel, ProjectModel, MountingComponentModel, FileModel
 
 User = get_user_model()
 
-# Create your tests here.
-class CreateClientModelTest(APITestCase):
+def permissionsApply(user: AbstractBaseUser, *models: models.Model):
+    perms = []
+    for model in models:
+        ct_client = ContentType.objects.get_for_model(model)
+        perms.extend(Permission.objects.filter(content_type=ct_client))
+    user.user_permissions.add(*perms)
+
+    return user
+
+class BaseTestSetup(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # user create 
+        cls.auth_user = User.objects.create_user(email='staff@bob.com', password='HardCorePass1', is_staff=True)
+        cls.regular_user = User.objects.create_user(email='reg@bob.com', password='HardCorePass1')
+
+
+class CreateClientModelTest(BaseTestSetup):
     def setUp(self):
         self.data = {
             'name': 'bmw'
@@ -19,12 +36,7 @@ class CreateClientModelTest(APITestCase):
             'name': 'bmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmaw'
         }
         self.url = reverse('client-list')
-        self.auth_user = User.objects.create_user(email='staff@bob.com', password='HardCorePass1', is_staff=True)
-        self.regular_user = User.objects.create_user(email='reg@bob.com', password='HardCorePass1')
-
-        content_type = ContentType.objects.get_for_model(ClientModel)
-        permission = Permission.objects.filter(content_type=content_type)
-        self.auth_user.user_permissions.add(*permission)
+        permissionsApply(self.auth_user, ClientModel)
 
     def test_client_get(self):
         response = self.client.get(self.url)
@@ -42,8 +54,32 @@ class CreateClientModelTest(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, 403)
 
-class CreateProjectModelTest(APITestCase):
-    pass
+class CreateProjectModelTest(BaseTestSetup):
+    def setUp(self):
+        self.client_data = {
+            'name': 'bmw'
+        }
+
+        permissionsApply(self.auth_user, ClientModel, ProjectModel)
+        self.client.force_authenticate(user=self.auth_user)
+
+        self.client_url = reverse('client-list')
+        self.project_url = reverse('project-list')
+        
+        response = self.client.post(self.client_url, self.client_data, format='json')
+        self.project_data = {
+            'name': 'g2x',
+            'client': response.data['id']
+        }
+    def test_project_create_with_perms(self):
+        response = self.client.post(self.project_url, self.project_data, format='json')
+        self.assertEqual(response.status_code, 201)
+    
+    def test_project_create_without_perms(self):
+        self.client.force_authenticate(user=self.regular_user)
+        response = self.client.post(self.project_url, self.project_data, format='json')
+        self.assertEqual(response.status_code, 403)
+
 class CreateMountingComponentModelTest(APITestCase):
     pass
 class CreateFileModelTest(APITestCase):
