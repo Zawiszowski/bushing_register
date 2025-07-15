@@ -80,9 +80,35 @@ class CreateProjectModelTest(BaseTestSetup):
         response = self.client.post(self.project_url, self.project_data, format='json')
         self.assertEqual(response.status_code, 403)
 
-class CreateMountingComponentModelTest(APITestCase):
-    pass
-class CreateFileModelTest(APITestCase):
-    pass
+class CreateMountingComponentModelTest(BaseTestSetup):
+    def setUp(self):
+        self.data = {
+            'name': 'wishbone'
+        }
+        self.data_wrong = {
+            'name': 'wishboneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        }
+        self.url = reverse('mounting_component-list')
+        permissionsApply(self.auth_user, MountingComponentModel)
+
+    def test_mc_get(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_mc_create_with_permissions(self):
+        self.client.force_authenticate(user=self.auth_user)
+        response = self.client.post(self.url, self.data, format='json')
+        response_wrong = self.client.post(self.url, self.data_wrong, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response_wrong.status_code, 400)
+
+    def test_mc_create_without_permissions(self):
+        self.client.force_authenticate(user=self.regular_user)
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, 403)
+
 class CreateBusingRegisterItemTest(APITestCase):
+    pass
+
+class CreateFileModelTest(APITestCase):
     pass
