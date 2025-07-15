@@ -12,8 +12,8 @@ def validate_stiffness(value):
     if len(value) > 20:
         raise ValidationError('The list cannot have more than 20 elements.')
     for item in value:
-        if not isinstance(item, (int, float)):
-            raise ValidationError('All elements must be numbers (int or float).')
+        if not isinstance(item, (int)):
+            raise ValidationError('All elements must be numbers (int).')
         
 
 def validate_file_size(file):

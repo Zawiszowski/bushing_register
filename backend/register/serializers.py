@@ -40,8 +40,8 @@ class bushingSerializer(serializers.ModelSerializer):
         if len(value) > 20:
             raise serializers.ValidationError('The list cannot have more than 20 elements.')
         for item in value:
-            if not isinstance(item, (int, float)):
-                raise serializers.ValidationError('All elements must be numbers (int or float).')
+            if not isinstance(item, (int)):
+                raise serializers.ValidationError('All elements must be numbers (int).')
         return value
     
     def validate_stiffness_y(self, value):
@@ -50,8 +50,8 @@ class bushingSerializer(serializers.ModelSerializer):
         if len(value) > 20:
             raise serializers.ValidationError('The list cannot have more than 20 elements.')
         for item in value:
-            if not isinstance(item, (int, float)):
-                raise serializers.ValidationError('All elements must be numbers (int or float).')
+            if not isinstance(item, (int)):
+                raise serializers.ValidationError('All elements must be numbers (int).')
         return value
     
     def validate(self, data):
