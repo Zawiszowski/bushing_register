@@ -59,6 +59,7 @@ const defaultRegister : RegisterType = {
     decommissioned: false,
     storage_locker:"",
     velocity: "",
+    mounting_component: defaultMountingComp,
     axle: '',
     stiffness_x:  [-2400,-2000,-1500,-800,-200,0,200,800,1500,2000,2400],
     stiffness_y: [1,1,1,1,1,1,1,1,1,1,1],//[1200,1000,850,800,820,850,800,780,800,850,1100],

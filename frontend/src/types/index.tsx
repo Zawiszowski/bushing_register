@@ -105,6 +105,7 @@ export interface RegisterType {
     decommissioned: boolean,
     storage_locker: string,
     velocity: string,
+    mounting_component: MCType,
     axle: string,
     stiffness_x:  Array<number>,
     stiffness_y: Array<number>,//[1200,1000,850,800,820,850,800,780,800,850,1100],

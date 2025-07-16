@@ -50,8 +50,9 @@ const CustomModal = (props : Props) => {
     const client_id_init = JSON.parse(JSON.stringify(activeItem.project.id !== -1 ? clients.find(item => item.id === (activeItem.project?.client))?.id : clients.find(item => item.name.toLowerCase() === client_name_init)?.id ))
 
     const mc_name_init = 'other'
-    const mc_id_init = JSON.parse(JSON.stringify(activeItem.project.id !== -1 ? mountingComp.find(item => item.id === (activeItem.project?.client))?.id : mountingComp.find(item => item.name.toLowerCase() === mc_name_init)?.id ))
-
+    debugger
+    const mc_id_init = JSON.parse(JSON.stringify(activeItem.mounting_component.id !== -1 ? mountingComp.find(item => item.id === (activeItem.mounting_component?.id))?.id : mountingComp.find(item => item.name.toLowerCase() === mc_name_init)?.id ))
+    
     const [clientId, setClientId] = useState(client_id_init) 
     const [mountingCompId, setMountingCompId] = useState(mc_id_init)
     const {projects} = useProject(clientId, config)
