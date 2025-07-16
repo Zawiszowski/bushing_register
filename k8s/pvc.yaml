@@ -21,6 +21,8 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  volumeName: br-media-pv
+  storageClassName: ""
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -45,3 +47,5 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  volumeName: br-postgres-pv
+  storageClassName: ""
