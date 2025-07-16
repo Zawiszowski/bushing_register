@@ -84,7 +84,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
             
             console.log(err)
             setAuthError({error:err, detail: err.response.data})
-            notify_error('Bad credentials or no VPN connection')
+            notify_error('Bad credentials')
             })
     }
 
@@ -106,7 +106,8 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
             if (res.status === 201){
 
                 console.log('created')
-                notify_success('created')
+                notify_success('Account created!\n Activation link has been send to your email')
+                setAuthError({error:'', detail: []})
                 setCreated(!created)
  
             }
@@ -116,7 +117,7 @@ export const AuthProvider: React.FC<AuthProviderType> = ({children}) => {
             
             console.log(err)
             setAuthError({error:err, detail: err.response.data})
-            notify_error('Bad credentials or no VPN connection')
+            notify_error('Bad credentials')
             })
 
 

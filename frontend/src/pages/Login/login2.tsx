@@ -329,9 +329,9 @@ useEffect(() =>{
             </SubmitButton>
             {authError.error !== '' && (
                 <>
+        
+                  <ErrorMessage>{ isLogin ? 'Something went wrong during the process! \n Have you acivated your account?': 'Something went wrong during the process!'}</ErrorMessage>
                 
-                  <ErrorMessage>Something went wrong during the process</ErrorMessage>
-              
                 </>
             )}
           </FormContent>
