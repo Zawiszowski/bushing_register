@@ -24,6 +24,7 @@ urlpatterns = [
     # path('api/', include('todo.urls') ),
     path('user_api/', include('users.urls')),
     path('api/', include('register.urls')),
+    path('calculate_api/', include('register.urls')),
 ]
 
 if settings.DEBUG:
