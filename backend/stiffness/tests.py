@@ -2,7 +2,7 @@ from django.test import TestCase
 from register.models import BushingRegister, MountingComponentModel, ClientModel, ProjectModel
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
-from stiffness.ml_model import DataService, RandomForest, user_parameters
+from stiffness.ml_model import DataService, RandomForest, user_parameters, register_parameters
 from sklearn.multioutput import MultiOutputRegressor
 
 User = get_user_model()
@@ -17,9 +17,9 @@ class BaseRegisterTestSetup(TestCase):
         stiffness_y = [[700, 600, 500, 400, 250, 400, 500, 600, 700, 750], [700, 600, 500, 400, 250, 400, 500, 600, 700, 750], [700, 600, 500, 400, 250, 400, 500, 600, 700, 750]]
         cls.stiffness_x = [[-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500], [-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500], [-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500]]
 
-        cls.register = []
+        cls.registers = []
         for index, (stiff_x, stiff_y) in enumerate(zip(cls.stiffness_x, stiffness_y)):
-            cls.register.append(BushingRegister.objects.create(
+            cls.registers.append(BushingRegister.objects.create(
                 project=cls.project, 
                 custom_pn=f"asdasd_{index}", 
                 client_pn=f'adsadw_{index}', 
@@ -37,31 +37,33 @@ class DataServiceTest(BaseRegisterTestSetup):
         """
         Should success if register created correctly
         """
-        print(self.register[0].__dict__)
-        self.assertEqual(self.register[0].project, self.project)
-        self.assertEqual(self.register[0].stiffness_x, self.stiffness_x[0])
+        
+        self.assertEqual(self.registers[0].project, self.project)
+        self.assertEqual(self.registers[0].stiffness_x, self.stiffness_x[0])
     
     def test_data_service_interpolation(self):
         """
         Should return dect of X and Y with equal len
         """
         service = DataService()
-        res = service._interpolate([-10, -5, -2, 0, 2, 5, 10], [500, 300, 200, 100, 200, 300, 500])
-        self.assertEqual(len(res['X']), 20)
-        self.assertEqual(len(res['Y']), 20)
+        res = service._interpolate_stiffness([-10, -5, -2, 0, 2, 5, 10], [500, 300, 200, 100, 200, 300, 500], -10, 10, 20)
+        print(res)
+        self.assertEqual(len(res), 20)
+
 
     def test_data_service(self):
         """
         Shuold success if data retrived
         """
+        register_params = register_parameters(self.registers[0].mounting_component,
+                                              self.registers[0].axle,
+                                              self.registers[0].stiffness_y,
+                                              self.registers[0].stiffness_y)
         service = DataService()
-        res = service.get_data(self.component.id)
+        (x, y) = service.get_data(self.component.id)
 
-        self.assertEqual(len(res['X']), 20)
-        self.assertEqual(len(res['Y']), 20)
-
-        self.assertEqual((res['X'][0], res['X'][-1]), (self.register[0].stiffness_x[0], self.register[0].stiffness_x[-1]))
-        self.assertEqual((res['Y'][0], res['Y'][-1]), (self.register[0].stiffness_y[0], self.register[0].stiffness_y[-1]))
+        self.assertEqual(x[0], [1, 'Front', 250, -4000, 4500])
+        self.assertEqual(len(y[0]), 20)
 
 
 
