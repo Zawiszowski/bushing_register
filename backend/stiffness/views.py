@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CalculateStiffnessSerializer
-from ml_model import stiffness_prediction, DataService, RandomForest, user_input
+from ml_model import stiffness_prediction, DataService, RandomForest, user_parameters
 
 class calculateStiffnessView(APIView):
     
@@ -17,6 +17,6 @@ class calculateStiffnessView(APIView):
         data = DataService()
         data.get_data(serializer.mounting_component)
         model = RandomForest()
-        stiffness = model.predict_stiffness(data, user_input(serializer.mounting_component, serializer.axle, serializer.k0, serializer.min_force, serializer.max_force))
+        stiffness = model.predict_stiffness(data, user_parameters(serializer.mounting_component, serializer.axle, serializer.k0, serializer.min_force, serializer.max_force))
 
         return Response()

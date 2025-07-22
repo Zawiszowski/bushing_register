@@ -1,12 +1,13 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from register.models import BushingRegister
 from abc import ABC, abstractmethod
-from __future__ import annotations
+from sklearn.multioutput import MultiOutputRegressor
 
 
 
 @dataclass
-class user_input:
+class user_parameters:
     mounting_component: int
     axle: int
     k_0: int
@@ -58,14 +59,14 @@ class MLModelService(ABC):
 
 class RandomForest(MLModelService):
 
-    def predict_stiffness(self, learing_data: DataService, user_input: user_input):
+    def predict_stiffness(self, data_service: DataService, user_parameters: user_parameters):
         """
         Get learing data and user input to predict stiffness from existing data
         """
-        self._create_model()
+        self._create_model(data_service)
         pass
 
-    def _create_model(self):
+    def _create_model(self, data_service) -> MultiOutputRegressor:
         """
         Create model base on skikitlear and RandomForest
         """
