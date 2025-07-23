@@ -30,9 +30,18 @@ class register_parameters:
         quasi-static factor, is in the stiffness y, near 0N forces (stiffness_x)
         """
         threshold = 2
-        middle = np.where((np.array(self.forces) < threshold) & (np.array(self.forces) > -threshold))
-        
-        return self.stiffness[middle[0][0]]
+        try:
+            middle = np.where((np.array(self.forces) < threshold) & (np.array(self.forces) > -threshold))
+            return self.stiffness[min(middle[0])]
+
+        except ValueError:
+            middle = len(self.forces)//2
+            threshold_step = 1
+            stiff_near_0 = []
+            for swing in range(-threshold_step-1, threshold_step, 1):
+                stiff_near_0.append(abs(self.forces[middle + swing]))
+            print(stiff_near_0)
+            return self.stiffness[self.forces.index(min(stiff_near_0))]
         
     @property
     def min_force(self):
@@ -80,15 +89,21 @@ class RandomForest(MLModelService):
 
 class DataService():
 
-    def get_data(self, counting_compoenent_id) -> dict:
+    def __init__(self):
+        
+        self.x = []
+        self.y = []
+
+    def get_data(self, mounting_component_id) -> tuple:
         """
         Retrive data from db and prapare it to model
         """
-        qs = BushingRegister.objects.all().filter(mounting_component__id=counting_compoenent_id)
+        qs = BushingRegister.objects.all().filter(mounting_component__id=mounting_component_id)
         
-        x = []
-        y = []
         for model in qs:
+            if len(model.stiffness_x) != len(model.stiffness_y) and len(model.stiffness_x) < 5 and len(model.stiffness_y) < 5:
+                continue
+            
             register_params = register_parameters(model.mounting_component.id, 
                                                   model.axle,
                                                   model.stiffness_y,
@@ -100,16 +115,15 @@ class DataService():
                                                        register_params.min_force,
                                                        register_params.max_force,
                                                        )
-            x.append([register_params.mounting_component, 
+            self.x.append([register_params.mounting_component, 
                       register_params.axle, 
                       register_params.k_0, 
                       register_params.min_force, 
                       register_params.max_force,
                       ])
             
-            y.append(interpolated)
+            self.y.append(interpolated)
 
-        return (x, y)
         
 
     def _interpolate_stiffness(self, forces, stiffness, min_force, max_force, points=20) -> dict:

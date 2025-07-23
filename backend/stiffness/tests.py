@@ -15,7 +15,7 @@ class BaseRegisterTestSetup(TestCase):
         client = ClientModel.objects.create(name='bmw')
         cls.project = ProjectModel.objects.create(name='g2x', client=client)
         stiffness_y = [[700, 600, 500, 400, 250, 400, 500, 600, 700, 750], [700, 600, 500, 400, 250, 400, 500, 600, 700, 750], [700, 600, 500, 400, 250, 400, 500, 600, 700, 750]]
-        cls.stiffness_x = [[-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500], [-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500], [-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500]]
+        cls.stiffness_x = [[-4000, -3000, -2000, -1000, 6, 1000, 2000, 3000, 4000, 4500], [-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500], [-4000, -3000, -2000, -1000, 0, 1000, 2000, 3000, 4000, 4500]]
 
         cls.registers = []
         for index, (stiff_x, stiff_y) in enumerate(zip(cls.stiffness_x, stiffness_y)):
@@ -60,10 +60,10 @@ class DataServiceTest(BaseRegisterTestSetup):
                                               self.registers[0].stiffness_y,
                                               self.registers[0].stiffness_y)
         service = DataService()
-        (x, y) = service.get_data(self.component.id)
+        service.get_data(self.component.id)
 
-        self.assertEqual(x[0], [1, 'Front', 250, -4000, 4500])
-        self.assertEqual(len(y[0]), 20)
+        self.assertEqual(service.x[0], [1, 'Front', 250, -4000, 4500])
+        self.assertEqual(len(service.y[0]), 20)
 
 
 
