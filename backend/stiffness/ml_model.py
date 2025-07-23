@@ -15,16 +15,22 @@ class AxleEnum(Enum):
 @dataclass
 class user_parameters:
     mounting_component: int
-    axle: int
+    axle: str
     k_0: int
     min_force: int
     max_force: int
 
+    @property
+    def axle_enum(self):
+        """
+        axle string to num
+        """
+        return AxleEnum[self.axle].value
 
 @dataclass
 class register_parameters:
     mounting_component: int
-    axle: int
+    axle: str
     stiffness: list
     forces: list
 
@@ -97,7 +103,7 @@ class RandomForest(MLModelService):
         
         new_input = pd.DataFrame({
             'mounting_component': [user_parameters.mounting_component],
-            'axle': [user_parameters.axle],
+            'axle': [user_parameters.axle_enum],
             'k0': [user_parameters.k_0],
             'min_force': [user_parameters.min_force],
             'max_force': [user_parameters.max_force]
@@ -136,7 +142,6 @@ class DataService():
         Retrive data from db and prapare it to model
         """
         qs = BushingRegister.objects.all().filter(mounting_component__id=mounting_component_id)
-        
         for model in qs:
             if len(model.stiffness_x) != len(model.stiffness_y) and len(model.stiffness_x) < 5 and len(model.stiffness_y) < 5:
                 continue

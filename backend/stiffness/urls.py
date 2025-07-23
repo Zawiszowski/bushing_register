@@ -3,6 +3,6 @@ import stiffness.views as views
 
 
 urlpatterns = [
-    path('calculate_stiffness/', views.calculateStiffnessView.as_view(), name='calculate_stiffness'),
+    path('calculate_stiffness/', views.CalculateStiffnessMapView.as_view(), name='calculate_stiffness'),
 
 ]
