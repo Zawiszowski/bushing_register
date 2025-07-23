@@ -47,7 +47,7 @@ class DataServiceTest(BaseRegisterTestSetup):
         """
         service = DataService()
         res = service._interpolate_stiffness([-10, -5, -2, 0, 2, 5, 10], [500, 300, 200, 100, 200, 300, 500], -10, 10, 20)
-        print(res)
+ 
         self.assertEqual(len(res), 20)
 
 
@@ -70,29 +70,32 @@ class DataServiceTest(BaseRegisterTestSetup):
 class RandomForestTest(BaseRegisterTestSetup):
 
     def setUp(self):
-        data = DataService()
-        self.data_service = data.get_data(self.component.id)
+        self.data_service = DataService()
+        self.user_param = user_parameters(1, 1, 100, 200, 300)
+        self.data_service.get_data(self.user_param.mounting_component)
 
     def test_create_ml_model(self):
         """
         Should create model
         """
 
-        service = RandomForest()
-        model = service._create_model(self.data_service)
+        service = RandomForest(self.data_service)
+        service._create_model()
 
-        self.assertTrue(model)
+        self.assertTrue(service.model)
 
     def test_create_stiffness_foce_lists(self):
         """
         should create force/stiffness lists
         """ 
-        user_param = user_parameters(1, 1, 100, 200, 300)
-        service = RandomForest()
-        stiffness = service.predict_stiffness(self.data_service, user_param)
+        
+        ml_service = RandomForest(self.data_service)
+        (force, stiffness) = ml_service.predict_stiffness(self.user_param)
         # TODO think how to verify correctnes of data ? what if user picks data from outside of range ?
-        self.assertEqual(len(stiffness['X']), 20)
-        self.assertEqual(len(stiffness['Y']), 20)
+        print(force)
+        print(stiffness)
+        self.assertEqual(len(stiffness), 20)
+        self.assertEqual(len(force), 20)
 
 class PredictStiffnessTest(APITestCase):
 

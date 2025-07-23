@@ -2,10 +2,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from register.models import BushingRegister
 from abc import ABC, abstractmethod
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.multioutput import MultiOutputRegressor
 import numpy as np
+import pandas as pd
+from enum import Enum
 
-
+class AxleEnum(Enum):
+    Front = 0
+    Rear = 1
 
 @dataclass
 class user_parameters:
@@ -40,7 +45,7 @@ class register_parameters:
             stiff_near_0 = []
             for swing in range(-threshold_step-1, threshold_step, 1):
                 stiff_near_0.append(abs(self.forces[middle + swing]))
-            print(stiff_near_0)
+            
             return self.stiffness[self.forces.index(min(stiff_near_0))]
         
     @property
@@ -57,6 +62,14 @@ class register_parameters:
         """
         return max(self.forces)
     
+    @property
+    def axle_enum(self):
+        """
+        axle string to num
+        """
+        return AxleEnum[self.axle].value
+
+    
 
 def stiffness_prediction() -> list:
     pass
@@ -72,18 +85,42 @@ class MLModelService(ABC):
 
 class RandomForest(MLModelService):
 
-    def predict_stiffness(self, data_service: DataService, user_parameters: user_parameters):
+    def __init__(self, data_service: DataService):
+        self.model = None
+        self.data_service = data_service
+
+    def predict_stiffness(self, user_parameters: user_parameters) -> tuple:
         """
         Get learing data and user input to predict stiffness from existing data
         """
-        self._create_model(data_service)
-        pass
+        self._create_model()
+        
+        new_input = pd.DataFrame({
+            'mounting_component': [user_parameters.mounting_component],
+            'axle': [user_parameters.axle],
+            'k0': [user_parameters.k_0],
+            'min_force': [user_parameters.min_force],
+            'max_force': [user_parameters.max_force]
+        })
 
-    def _create_model(self, data_service) -> MultiOutputRegressor:
+        predicted_stiffness = np.rint(self.model.predict(new_input)[0])
+        forces = np.rint(np.linspace(user_parameters.min_force, user_parameters.max_force, len(predicted_stiffness)))
+        
+        return (forces, predicted_stiffness)
+
+    def _create_model(self) -> MultiOutputRegressor:
         """
         Create model base on skikitlear and RandomForest
         """
-        pass
+        x = pd.DataFrame(self.data_service.x, columns=['mounting_component', 'axle', 'k0', 'min_force', 'max_force'])
+        y = pd.DataFrame(self.data_service.y, columns=[f'k_{i}' for i in range(len(self.data_service.y[0]))]) 
+
+        # Model ML: RandomForest + MultiOutput
+        model = MultiOutputRegressor(RandomForestRegressor(random_state=0))
+        model.fit(x, y)
+
+        self.model = model
+
 
 
 
@@ -94,7 +131,7 @@ class DataService():
         self.x = []
         self.y = []
 
-    def get_data(self, mounting_component_id) -> tuple:
+    def get_data(self, mounting_component_id) -> None:
         """
         Retrive data from db and prapare it to model
         """
@@ -103,7 +140,7 @@ class DataService():
         for model in qs:
             if len(model.stiffness_x) != len(model.stiffness_y) and len(model.stiffness_x) < 5 and len(model.stiffness_y) < 5:
                 continue
-            
+
             register_params = register_parameters(model.mounting_component.id, 
                                                   model.axle,
                                                   model.stiffness_y,
@@ -116,7 +153,7 @@ class DataService():
                                                        register_params.max_force,
                                                        )
             self.x.append([register_params.mounting_component, 
-                      register_params.axle, 
+                      register_params.axle_enum, 
                       register_params.k_0, 
                       register_params.min_force, 
                       register_params.max_force,
@@ -126,7 +163,7 @@ class DataService():
 
         
 
-    def _interpolate_stiffness(self, forces, stiffness, min_force, max_force, points=20) -> dict:
+    def _interpolate_stiffness(self, forces, stiffness, min_force, max_force, points=20) -> list:
         """
         Transform data with even sampling frequency
         """
