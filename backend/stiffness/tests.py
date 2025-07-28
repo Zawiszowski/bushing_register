@@ -63,7 +63,7 @@ class DataServiceTest(BaseRegisterTestSetup):
         service = DataService()
         service.get_data(self.component.id)
 
-        self.assertEqual(service.x[0], [1, 0, 250, -4000, 4500])
+        self.assertEqual(service.x[0], [self.component.id, 0, 250, -4000, 4500])
         self.assertEqual(len(service.y[0]), 20)
 
 
