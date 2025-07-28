@@ -31,9 +31,12 @@ class CalculateStiffnessMapView(APIView):
         
         user_params = user_parameters(serializer.validated_data['mounting_component'], 
                                       serializer.validated_data['axle'], 
-                                      serializer.validated_data['k0'], 
                                       serializer.validated_data['min_force'], 
-                                      serializer.validated_data['max_force'])
+                                      serializer.validated_data['max_force'],
+                                      serializer.validated_data['inner_diameter'],
+                                      serializer.validated_data['outer_diameter'],
+                                      serializer.validated_data['length'],
+                                      serializer.validated_data['shear_modulus'])
         data = DataService()
         data.get_data(user_params.mounting_component)
         model = RandomForest(data)

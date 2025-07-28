@@ -72,7 +72,7 @@ class RandomForestTest(BaseRegisterTestSetup):
 
     def setUp(self):
         self.data_service = DataService()
-        self.user_param = user_parameters(self.component.id, 'Front', 100, 200, 300)
+        self.user_param = user_parameters(self.component.id, 'Front', 3000, 3500, 25, 70, 80, 5*10e6)
         self.data_service.get_data(self.user_param.mounting_component)
 
     def test_create_ml_model(self):
@@ -96,6 +96,12 @@ class RandomForestTest(BaseRegisterTestSetup):
 
         self.assertEqual(len(stiffness), 20)
         self.assertEqual(len(force), 20)
+    
+    def test_k0_calculation(self):
+        """
+        should success if values are the same
+        """
+        self.assertAlmostEqual(209, self.user_param.k_0)
 
 class PredictStiffnessTest(BaseRegisterTestSetup):
 
@@ -106,14 +112,17 @@ class PredictStiffnessTest(BaseRegisterTestSetup):
         data = {
             'mounting_component': self.component.id,
             'axle': 'Front',
-            'k0': 260,
             'min_force': 3000,
             'max_force': 3500,
+            'inner_diameter': 25,
+            'outer_diameter': 70,
+            'length': 80,
+            'shear_modulus': 5*10e6
         }
 
         url = reverse('calculate_stiffness')
         res = self.client.post(url, data, format='json')
-    
+
         self.assertEqual(res.status_code, 200)
         self.assertTrue(len(res.data['data']['stiffness']) > 0)
         

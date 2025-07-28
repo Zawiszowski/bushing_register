@@ -7,6 +7,7 @@ from sklearn.multioutput import MultiOutputRegressor
 import numpy as np
 import pandas as pd
 from enum import Enum
+import math
 
 class AxleEnum(Enum):
     Front = 0
@@ -16,9 +17,21 @@ class AxleEnum(Enum):
 class user_parameters:
     mounting_component: int
     axle: str
-    k_0: int
+    # k_0: int
     min_force: int
     max_force: int
+    inner_diamater: float
+    outer_diameter: float
+    length: float
+    shear_modulus: int
+
+    @property
+    def k_0(self):
+        """
+        clculated quasi static stiffnes from simple function
+        """
+        A = math.pi*((self.outer_diameter/2)**2 - (self.inner_diamater/2)**2)
+        return int((self.shear_modulus/10e6)*A/self.length)
 
     @property
     def axle_enum(self):
