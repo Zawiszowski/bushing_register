@@ -148,3 +148,42 @@ class PredictStiffnessTest(BaseRegisterTestSetup):
         Should return expected characteristics
         """
         pass
+
+
+class EstimateShearModulusTest(BaseRegisterTestSetup):
+    def test_post_predict_stiffness(self):
+        """
+        Should return ssuggestion for shear modulus with status code 200
+        """
+        data = {
+            'mounting_component': self.component.id,
+            'axle': 'Front',
+            'min_force': 3000,
+            'max_force': 3500,
+            'inner_diameter': 25,
+            'outer_diameter': 70,
+            'length': 80,
+        }
+
+        url = reverse('estimate_shear_modulus')
+        res = self.client.post(url, data, format='json')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(len(res.data['data']['stiffness']) > 0)
+        
+
+    def test_post_bad_input_predict_stiffness(self):
+        """
+        Should  fail with status code 400
+        """
+        data = {
+            'axle': 'Rear',
+            'k0': 260,
+            'min_force': 3000,
+            'max_force': 3500,
+        }
+
+        url = reverse('estimate_shear_modulus')
+        res = self.client.post(url, data, format='json')
+
+        self.assertEqual(res.status_code, 400)
