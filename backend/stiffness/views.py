@@ -23,12 +23,20 @@ class EstimateShearModulus(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        user_params = BaseUserParameters()
+        user_params = BaseUserParameters(
+            serializer.validated_data['mounting_component'], 
+            serializer.validated_data['axle'], 
+            serializer.validated_data['min_force'], 
+            serializer.validated_data['max_force'],
+            serializer.validated_data['inner_diameter'],
+            serializer.validated_data['outer_diameter'],
+            serializer.validated_data['length'],
+            )
 
         estimate = GeminiEstimate()
         suggestion = estimate.shear_modulus(user_params)
 
-        return Response({'data': 'estimate result'}, status=status.HTTP_200_OK)
+        return Response({'data': suggestion}, status=status.HTTP_200_OK)
     
 class CalculateStiffnessMapView(APIView):
     """
@@ -40,14 +48,16 @@ class CalculateStiffnessMapView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        user_params = UserParameters(serializer.validated_data['mounting_component'], 
-                                      serializer.validated_data['axle'], 
-                                      serializer.validated_data['min_force'], 
-                                      serializer.validated_data['max_force'],
-                                      serializer.validated_data['inner_diameter'],
-                                      serializer.validated_data['outer_diameter'],
-                                      serializer.validated_data['length'],
-                                      serializer.validated_data['shear_modulus'])
+        user_params = UserParameters(
+            serializer.validated_data['mounting_component'], 
+            serializer.validated_data['axle'], 
+            serializer.validated_data['min_force'], 
+            serializer.validated_data['max_force'],
+            serializer.validated_data['inner_diameter'],
+            serializer.validated_data['outer_diameter'],
+            serializer.validated_data['length'],
+            serializer.validated_data['shear_modulus'],
+            )
         data = DataService()
         data.get_data(user_params.mounting_component)
         model = RandomForest(data)

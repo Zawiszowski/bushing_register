@@ -151,6 +151,7 @@ class PredictStiffnessTest(BaseRegisterTestSetup):
 
 
 class EstimateShearModulusTest(BaseRegisterTestSetup):
+
     def test_post_predict_stiffness(self):
         """
         Should return ssuggestion for shear modulus with status code 200
@@ -167,9 +168,9 @@ class EstimateShearModulusTest(BaseRegisterTestSetup):
 
         url = reverse('estimate_shear_modulus')
         res = self.client.post(url, data, format='json')
-
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(len(res.data['data']['stiffness']) > 0)
+        self.assertTrue(int(res.data['data']) > 0)
+        self.assertTrue(int(res.data['data']) < 12*10e6)
         
 
     def test_post_bad_input_predict_stiffness(self):
