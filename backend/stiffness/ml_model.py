@@ -14,21 +14,32 @@ class AxleEnum(Enum):
     Rear = 1
 
 @dataclass
-class user_parameters:
+class BaseUserParameters:
     mounting_component: int
     axle: str
-    # k_0: int
-    min_force: int
-    max_force: int
-    inner_diamater: float
-    outer_diameter: float
-    length: float
-    shear_modulus: int
+    min_force: int # N
+    max_force: int # N
+    inner_diamater: float # mm
+    outer_diameter: float # mm
+    length: float # mm
+
+
+@dataclass
+class UserParameters:
+    mounting_component: int
+    axle: str
+    min_force: int # N
+    max_force: int # N
+    inner_diamater: float # mm
+    outer_diameter: float # mm
+    length: float # mm
+    shear_modulus: int # N/m^2
 
     @property
     def k_0(self):
         """
         clculated quasi static stiffnes from simple function
+            k_0 = G*A/h
         """
         A = math.pi*((self.outer_diameter/2)**2 - (self.inner_diamater/2)**2)
         return int((self.shear_modulus/10e6)*A/self.length)
@@ -41,7 +52,7 @@ class user_parameters:
         return AxleEnum[self.axle].value
 
 @dataclass
-class register_parameters:
+class RegisterParameters:
     mounting_component: int
     axle: str
     stiffness: list
@@ -108,7 +119,7 @@ class RandomForest(MLModelService):
         self.model = None
         self.data_service = data_service
 
-    def predict_stiffness(self, user_parameters: user_parameters) -> tuple:
+    def predict_stiffness(self, user_parameters: UserParameters) -> tuple:
         """
         Get learing data and user input to predict stiffness from existing data
         """
@@ -159,7 +170,7 @@ class DataService():
             if len(model.stiffness_x) != len(model.stiffness_y) and len(model.stiffness_x) < 5 and len(model.stiffness_y) < 5:
                 continue
 
-            register_params = register_parameters(model.mounting_component.id, 
+            register_params = RegisterParameters(model.mounting_component.id, 
                                                   model.axle,
                                                   model.stiffness_y,
                                                   model.stiffness_x

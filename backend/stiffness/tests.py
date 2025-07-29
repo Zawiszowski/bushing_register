@@ -2,7 +2,7 @@ from django.test import TestCase
 from register.models import BushingRegister, MountingComponentModel, ClientModel, ProjectModel
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
-from stiffness.ml_model import DataService, RandomForest, user_parameters, register_parameters
+from stiffness.ml_model import DataService, RandomForest, UserParameters, RegisterParameters
 from sklearn.multioutput import MultiOutputRegressor
 from django.urls import reverse
 
@@ -56,7 +56,7 @@ class DataServiceTest(BaseRegisterTestSetup):
         """
         Shuold success if data retrived
         """
-        register_params = register_parameters(self.registers[0].mounting_component,
+        register_params = RegisterParameters(self.registers[0].mounting_component,
                                               self.registers[0].axle,
                                               self.registers[0].stiffness_y,
                                               self.registers[0].stiffness_y)
@@ -72,7 +72,7 @@ class RandomForestTest(BaseRegisterTestSetup):
 
     def setUp(self):
         self.data_service = DataService()
-        self.user_param = user_parameters(self.component.id, 'Front', 3000, 3500, 25, 70, 80, 5*10e6)
+        self.user_param = UserParameters(self.component.id, 'Front', 3000, 3500, 25, 70, 80, 5*10e6)
         self.data_service.get_data(self.user_param.mounting_component)
 
     def test_create_ml_model(self):

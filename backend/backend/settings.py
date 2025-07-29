@@ -40,7 +40,7 @@ if debug in DEBUG_DICT.keys():
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=lambda v: [s.strip() for s in v.split(',')])
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
@@ -253,3 +253,5 @@ TEMPLATES = [
         },
     },
 ]
+
+GEMINI_API_KEY = config('GEMINI_API_KEY', default='')

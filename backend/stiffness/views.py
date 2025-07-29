@@ -2,8 +2,9 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import CalculateStiffnessSerializer
-from stiffness.ml_model import stiffness_prediction, DataService, RandomForest, user_parameters
+from .serializers import CalculateStiffnessSerializer, BaseCalculateStiffnessSerializer
+from stiffness.estimate import GeminiEstimate
+from stiffness.ml_model import stiffness_prediction, DataService, RandomForest, UserParameters, BaseUserParameters
 
 class CalculateQuasiStaticStiffness(APIView):
     """
@@ -12,13 +13,23 @@ class CalculateQuasiStaticStiffness(APIView):
     """
     pass
 
-class EstimateKirchoffsFactor(APIView):
+class EstimateShearModulus(APIView):
     """
-    Base on mounting element and axle estimate factor
+    Base on mounting element, axle, d, D, L estimate shear modulus
     """
-    pass
+    def post(self, request):
+        serializer = BaseCalculateStiffnessSerializer(data=request.data)
+        
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        user_params = BaseUserParameters()
 
+        estimate = GeminiEstimate()
+        suggestion = estimate.shear_modulus(user_params)
+
+        return Response({'data': 'estimate result'}, status=status.HTTP_200_OK)
+    
 class CalculateStiffnessMapView(APIView):
     """
     Handles request to calculate stiffness map
@@ -29,7 +40,7 @@ class CalculateStiffnessMapView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        user_params = user_parameters(serializer.validated_data['mounting_component'], 
+        user_params = UserParameters(serializer.validated_data['mounting_component'], 
                                       serializer.validated_data['axle'], 
                                       serializer.validated_data['min_force'], 
                                       serializer.validated_data['max_force'],
