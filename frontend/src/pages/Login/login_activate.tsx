@@ -16,7 +16,7 @@ const Activate = () => {
   let {config} = useAuthContext();
 
   useEffect(() => {
-    debugger
+    
     axios.get(DRF_ADRESS + `/user_api/activate/${uid}/${token}/`, config)
     .then(_ => {
       notify_success('Account successfully activated')
