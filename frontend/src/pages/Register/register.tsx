@@ -7,6 +7,7 @@ import ModalAccept from '../../components/ModalAccept/ModalAccept.tsx'
 import { notify_error, notify_success, validation_info_error } from '../../utils/basicToasts.js'
 
 import { useSearch } from '../../hooks/useSearch.tsx'
+import { useMountingComponent } from '../../hooks/useMountingList.tsx'
 import {
     Span,
     InnerContainer,
@@ -46,7 +47,7 @@ const defaultClient : ClientType = {
 
 }
 
-const defaultMountingComp : MCType = {
+export const defaultMountingComp : MCType = {
     id: -1,
     name: '',
 
@@ -98,7 +99,7 @@ const defaultFalseValidate : ValidateRegister = {
   }
 
 const BushingRegister = () => {
-  let {user, config} = useAuthContext();
+  const {user, config} = useAuthContext();
   
 
   const [modal, setModal] = useState(false)
@@ -113,7 +114,8 @@ const BushingRegister = () => {
   const observer = useRef<any>('')
   const [query, setQuery] = useState('decommissioned=false&search=' + debouncedSearch) //  'i_use' --- > 'decommissioned=false&search=' + debouncedSearch
   const [clients, setClients] = useState<Array<ClientType>>([defaultClient, ])
-  const [mountingComp, setMountingComp] = useState<Array<MCType>>([defaultMountingComp, ])
+  // const [mountingComp, setMountingComp] = useState<Array<MCType>>([defaultMountingComp, ])
+  const {mountingComp} = useMountingComponent(config, defaultMountingComp)
   
   const {loading, error, list, hasMore} = useSearch(query, pageNumber, config, refresh)
   let [activeItem, setActiveItem] = useState<RegisterType>(
@@ -540,19 +542,6 @@ const BushingRegister = () => {
 
     }
 
-    const getMountingList = () => {
-
-      axios.get(DRF_ADRESS + `/api/mounting_component/`, config)
-      .then(response => {
-
-        setMountingComp(response.data ?? [])
-      })
-      .catch(error => {
-        setMountingComp([])
-        notify_error(error)
-      })
-
-    }
 
 
     
@@ -578,7 +567,6 @@ const BushingRegister = () => {
 
     useEffect( () => {
       getClientList()
-      getMountingList()
     }, [])
 
 
@@ -613,7 +601,7 @@ const BushingRegister = () => {
                         
                     type="text"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e:any) => setSearch(e.target.value)}
                     placeholder="Search"
                   />
                   <FormText>

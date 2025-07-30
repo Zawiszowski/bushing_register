@@ -129,3 +129,16 @@ export interface ValidateRegister {
     custom_pn_msg: string,
     photos_msg: string
 }
+
+export interface BushingParameters {
+    inner_diameter: number,
+    outer_diameter: number,
+    length: number,
+
+    mountingComp: MCType,
+    axle: string,
+    min_force: number,
+    max_force: number,
+    shear_modulus: number
+
+}
