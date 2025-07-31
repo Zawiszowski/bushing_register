@@ -315,7 +315,7 @@ useEffect(() =>{
             {/* Submit Button */}
             <SubmitButton
               type="button"
-              onClick={_ => handleSubmit()}
+              onClick={() => handleSubmit()}
               disabled={isLoading}
             >
               {isLoading ? (
@@ -403,7 +403,7 @@ useEffect(() =>{
             </FieldGroup>
             <SubmitButton
               type="button"
-              onClick={_ => logoutUser()}
+              onClick={() => logoutUser()}
      
             >
                 Logout
