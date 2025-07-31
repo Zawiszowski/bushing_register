@@ -19,7 +19,7 @@ up:
 	$(COMPOSE) up 
 
 down:
-	$(COMPOSE) down --rmi all --volumes --remove-orphans
+	$(COMPOSE) down --remove-orphans
 
 bash:
 	$(COMPOSE) exec br_backend_dev bash
@@ -27,8 +27,8 @@ bash:
 remove-image:
 	docker rmi -f $(image_id)
 
-remove-all-images: # it removes all unused images
-	docker image prune -a 
+remove-all-images: # it removes all tag <none> images
+	docker images -f "dangling=true" -q | xargs docker rmi
 
 open:
 	docker exec -it $(image_id) sh
