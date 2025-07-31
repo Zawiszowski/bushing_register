@@ -135,7 +135,7 @@ export interface BushingParameters {
     outer_diameter: number,
     length: number,
 
-    mountingComp: MCType,
+    mounting_component: number,
     axle: string,
     min_force: number,
     max_force: number,

@@ -1,7 +1,7 @@
 import { useEffect, useState} from 'react'
 import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatsSection, SectionTitle, FeaturesSection
  } from '../Home/home.styles';
-
+import axios from 'axios';
 import { SteveDimensions } from './stiffnessCalculator.styles';
 import { Input, Button } from 'reactstrap';
 import type { BushingParameters } from '../../types';
@@ -9,7 +9,10 @@ import type { BushingParameters } from '../../types';
 import { useMountingComponent } from '../../hooks/useMountingList';
 import { useAuthContext } from '../../context/AuthContext';
 import { defaultMountingComp } from '../Register/register';
+import { notify_success, validation_info_error } from '../../utils/basicToasts';
+import { DRF_ADRESS } from '../../data/constants';
 
+import Plot from 'react-plotly.js';
 
 const defaultBushingParemeters = {
 
@@ -17,13 +20,20 @@ const defaultBushingParemeters = {
       outer_diameter: 70,
       length: 80,
   
-      mountingComp: defaultMountingComp,
+      mounting_component: -1,
       axle: 'Rear',
       min_force: 200,
       max_force: 200,
       shear_modulus: 200
   
   
+}
+
+interface PlotType {
+  x: Array<number>,
+  y: Array<number>,
+  type: string,
+  mode: string,
 }
 
 const StiffnesCalculator = () => {
@@ -35,6 +45,7 @@ const StiffnesCalculator = () => {
   const mc_id_init = JSON.parse(JSON.stringify(mountingComp[0].id !== -1 && mountingComp.find(item => item.name.toLowerCase() === mc_name_init)?.id ))
   const [mountingCompId, setMountingCompId] = useState(mc_id_init)
   const [bushingParameters, setBushingParemeters] = useState<BushingParameters>(defaultBushingParemeters)
+  const [stiffnessPlot, setStiffnessPlot] = useState<PlotType>()
 
     const handleChange = (e : any) => {
         // if (readOnly) return;
@@ -42,7 +53,7 @@ const StiffnesCalculator = () => {
      
     
         if(e.target.name ==='mounting_component') {
-            setBushingParemeters({...bushingParameters, [name]: value});
+            setBushingParemeters({...bushingParameters, [name]: parseInt(value)});
 
             setMountingCompId(parseInt(value))
 
@@ -55,12 +66,41 @@ const StiffnesCalculator = () => {
         }
 
     };
+    debugger
   const estimateShearModulus = () => {
+    const {shear_modulus, ...rest} = bushingParameters
 
+    axios
+      .post( DRF_ADRESS+ "/calculate_api/estimate_shear_modulus/", rest, config)
+      .then(res => {
+
+
+        console.log(res.data.data)
+        setBushingParemeters({...bushingParameters, shear_modulus: res.data.data})
+        notify_success('ok')
+        
+      })
+      .catch(res => validation_info_error(res))
   }
 
   const requestStiffness = () => {
+    axios
+      .post( DRF_ADRESS+ "/calculate_api/calculate_stiffness/", bushingParameters, config)
+      .then(res => {
 
+
+        console.log(res.data.data)
+        setStiffnessPlot(
+              {
+              x: res.data.data.forces,
+              y: res.data.data.stiffness,
+              type: 'scatter',
+              mode: 'lines+markers',
+              })
+        notify_success('ok')
+        
+      })
+      .catch(res => validation_info_error(res))
   }
 
   return (
@@ -135,7 +175,7 @@ const StiffnesCalculator = () => {
             <Input               
               type='select'
               name="mounting_component"
-              value={mountingCompId}
+              value={bushingParameters.mounting_component}
               onChange={handleChange}
               placeholder="Choice component"
             >
@@ -160,7 +200,7 @@ const StiffnesCalculator = () => {
                   ) )
               }
             </Input>
-
+            <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
             minimal Force
             <Input
               // valid={!readOnly && validate.client}
@@ -170,6 +210,7 @@ const StiffnesCalculator = () => {
               value={bushingParameters.min_force}
               onChange={handleChange}
               placeholder="minimal Force"
+              style={{width:'50%', margin: '1rem'}}
             ></Input>
 
             maximum Force
@@ -179,13 +220,15 @@ const StiffnesCalculator = () => {
               value={bushingParameters.max_force}
               onChange={handleChange}
               placeholder="maximum force"
+              style={{width:'50%', margin: '1rem'}}
             ></Input>
+            </div>
 
         </FeaturesSection>
 
         <FeaturesSection>
             <SectionTitle>Pass or Estimate Shear Modulus</SectionTitle>
-
+            <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
             Shear modulus
             <Input
               type="number"
@@ -193,11 +236,14 @@ const StiffnesCalculator = () => {
               value={bushingParameters.shear_modulus}
               onChange={handleChange}
               placeholder="shear modulus"
+              style={{width:'200px', margin: '1rem'}}
+
             ></Input>
 
             <Button
               onClick={estimateShearModulus}
             >Estimate with Gemini</Button>
+            </div>
 
             
         </FeaturesSection>
@@ -211,6 +257,16 @@ const StiffnesCalculator = () => {
         <StatsSection >
 
           <SectionTitle>Dynamic Stiffness Chart</SectionTitle>
+          <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
+          <Plot
+            data={[stiffnessPlot]}
+            layout={{
+              title: 'Transparent Background',
+              paper_bgcolor: 'rgba(0,0,0,0)',   
+              plot_bgcolor: 'rgba(0,0,0,0)',    
+            }}
+          ></Plot>
+          </div>
          
         </StatsSection>
 
