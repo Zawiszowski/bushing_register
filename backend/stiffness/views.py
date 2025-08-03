@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CalculateStiffnessSerializer, BaseCalculateStiffnessSerializer
 from stiffness.estimate import GeminiEstimate
-from stiffness.ml_model import stiffness_prediction, DataService, RandomForest, UserParameters, BaseUserParameters
+from stiffness.ml_model import stiffness_prediction, DataService, RandomForest, UserParameters, BaseUserParameters, NeuralNetwork
 
 class CalculateQuasiStaticStiffness(APIView):
     """
@@ -59,7 +59,7 @@ class CalculateStiffnessMapView(APIView):
             serializer.validated_data['shear_modulus'],
             )
         data = DataService()
-        data.get_data(user_params.mounting_component)
+        data.get_data()
         model = RandomForest(data)
         (force, stiffness) = model.predict_stiffness(user_params)
 

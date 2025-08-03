@@ -9,6 +9,13 @@ import pandas as pd
 from enum import Enum
 import math
 
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import regularizers
+from tensorflow.keras.callbacks import EarlyStopping
+
 class AxleEnum(Enum):
     Front = 0
     Rear = 1
@@ -143,7 +150,7 @@ class RandomForest(MLModelService):
         """
         Create model base on skikitlear and RandomForest
         """
-        x = pd.DataFrame(self.data_service.x, columns=['mounting_component', 'axle', 'k0', 'min_force', 'max_force'])
+        x = pd.DataFrame(self.data_service.x, columns=self.data_service.labels)
         y = pd.DataFrame(self.data_service.y, columns=[f'k_{i}' for i in range(len(self.data_service.y[0]))]) 
 
         # Model ML: RandomForest + MultiOutput
@@ -161,12 +168,28 @@ class DataService():
         
         self.x = []
         self.y = []
+        self._force = []
+        self.labels = ['mounting_component', 'axle', 'k0', 'min_force', 'max_force']
 
-    def get_data(self, mounting_component_id) -> None:
+    def add_force(self):
+        _x = []
+        
+        for i in range(len(self.x)):
+            _x.append(np.concatenate((self.x[i], self._force[i])))
+
+        self.x = _x
+        self.labels.extend([f'force_{i}' for i in range(len(self.x[0])-5)])
+
+    def get_data(self, mounting_component_id=None) -> None:
         """
         Retrive data from db and prapare it to model
         """
-        qs = BushingRegister.objects.all().filter(mounting_component__id=mounting_component_id)
+        qs = None
+        if mounting_component_id:
+            qs = BushingRegister.objects.all().filter(mounting_component__id=mounting_component_id)
+        else:
+            qs = BushingRegister.objects.all()
+            
         for model in qs:
             if len(model.stiffness_x) != len(model.stiffness_y) and len(model.stiffness_x) < 5 and len(model.stiffness_y) < 5:
                 continue
@@ -182,13 +205,17 @@ class DataService():
                                                        register_params.min_force,
                                                        register_params.max_force,
                                                        )
-            self.x.append([register_params.mounting_component, 
-                      register_params.axle_enum, 
-                      register_params.k_0, 
-                      register_params.min_force, 
-                      register_params.max_force,
-                      ])
             
+            self._force.append(np.concatenate((np.linspace(register_params.min_force, 0, 10), np.linspace(0, register_params.max_force, 10))))
+
+            self.x.append([
+                register_params.mounting_component, 
+                register_params.axle_enum, 
+                register_params.k_0, 
+                register_params.min_force, 
+                register_params.max_force
+                      ])
+
             self.y.append(interpolated)
 
         
@@ -201,3 +228,77 @@ class DataService():
         target_forces_max = np.linspace(0, max_force, points)
         interpolated_stiffness = np.interp(np.concatenate((target_forces_min, target_forces_max)), forces, stiffness)
         return interpolated_stiffness
+
+class NeuralNetwork(MLModelService):
+
+    def __init__(self, data_service: DataService):
+        self.model = None
+        self.data_service = data_service
+        self.data_service.add_force()
+        # Standardizing the data
+
+
+    def predict_stiffness(self, user_parameters: UserParameters) -> tuple:
+        """
+        Get learning data and user input to predict stiffness from existing data
+        """
+        self._create_model()
+
+        forces = np.concatenate((np.linspace(user_parameters.min_force, 0, 10), np.linspace(0, user_parameters.max_force, 10)))
+        new_input = pd.DataFrame({
+            'mounting_component': [user_parameters.mounting_component],
+            'axle': [user_parameters.axle_enum],
+            'k0': [user_parameters.k_0],
+            'min_force': [user_parameters.min_force],
+            'max_force': [user_parameters.max_force],
+            **{f'force_{i}': forces[i] for i in range(len(forces))}
+        })
+        
+
+        predicted_stiffness = self.model.predict(new_input)[0]
+        forces_min = np.rint(np.linspace(user_parameters.min_force, 0, len(predicted_stiffness)//2))
+        forces_max = np.rint(np.linspace(0, user_parameters.max_force, len(predicted_stiffness)//2))
+
+        return (np.concatenate((forces_min, forces_max)), predicted_stiffness)
+
+    def _create_model(self):
+        """
+        Create a Neural Network model to predict stiffness.
+        """
+
+        x = pd.DataFrame(self.data_service.x, columns=self.data_service.labels)
+        y = pd.DataFrame(self.data_service.y, columns=[f'k_{i}' for i in range(len(self.data_service.y[0]))])
+
+        scaler_X = StandardScaler()
+        scaler_y = StandardScaler()
+
+        x_scaled = scaler_X.fit_transform(x)
+        y_scaled = scaler_y.fit_transform(y)
+
+        # Train-test split
+        X_train, X_test, y_train, y_test = train_test_split(x_scaled, y_scaled, test_size=0.2, random_state=42)
+
+        # Neural Network architecture
+        model = Sequential()
+        model.add(Dense(units=128, activation='relu', input_dim=X_train.shape[1], kernel_regularizer=regularizers.l2(0.01)))
+        model.add(BatchNormalization())
+        model.add(Dropout(0.3))
+
+        model.add(Dense(units=64, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
+        model.add(BatchNormalization())
+        model.add(Dropout(0.3))
+
+        model.add(Dense(units=32, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
+        model.add(Dense(units=y_train.shape[1], activation='linear'))  # Multi-output regression
+        
+        # Compile the model
+        model.compile(optimizer='adam', loss='mean_squared_error')
+
+
+        # Early stopping callback to avoid overfitting
+        early_stopping = EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True)
+
+        # Train the model
+        model.fit(X_train, y_train, epochs=100, batch_size=32, validation_data=(X_test, y_test), callbacks=[early_stopping])
+
+        self.model = model

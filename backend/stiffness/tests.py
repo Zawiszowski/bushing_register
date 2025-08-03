@@ -47,7 +47,7 @@ class DataServiceTest(BaseRegisterTestSetup):
         Should return dect of X and Y with equal len
         """
         service = DataService()
-        res = service._interpolate_stiffness([-10, -5, -2, 0, 2, 5, 10], [500, 300, 200, 100, 200, 300, 500], -10, 10, 20)
+        res = service._interpolate_stiffness([-10, -5, -2, 0, 2, 5, 10], [500, 300, 200, 100, 200, 300, 500], -10, 10, 10)
  
         self.assertEqual(len(res), 20)
 
