@@ -134,9 +134,10 @@ class RandomForest(MLModelService):
         })
 
         predicted_stiffness = np.rint(self.model.predict(new_input)[0])
-        forces = np.rint(np.linspace(user_parameters.min_force, user_parameters.max_force, len(predicted_stiffness)))
+        forces_min = np.rint(np.linspace(user_parameters.min_force, 0, len(predicted_stiffness)//2))
+        forces_max = np.rint(np.linspace(0, user_parameters.max_force, len(predicted_stiffness)//2))
         
-        return (forces, predicted_stiffness)
+        return (np.concatenate((forces_min, forces_max)), predicted_stiffness)
 
     def _create_model(self) -> MultiOutputRegressor:
         """
@@ -192,10 +193,11 @@ class DataService():
 
         
 
-    def _interpolate_stiffness(self, forces, stiffness, min_force, max_force, points=20) -> list:
+    def _interpolate_stiffness(self, forces, stiffness, min_force, max_force, points=10) -> list:
         """
         Transform data with even sampling frequency
         """
-        target_forces = np.linspace(min_force, max_force, points)
-        interpolated_stiffness = np.interp(target_forces, forces, stiffness)
+        target_forces_min = np.linspace(min_force, 0, points)
+        target_forces_max = np.linspace(0, max_force, points)
+        interpolated_stiffness = np.interp(np.concatenate((target_forces_min, target_forces_max)), forces, stiffness)
         return interpolated_stiffness
