@@ -6,6 +6,12 @@ build:
 	$(COMPOSE) build br_backend_dev
 	$(COMPOSE) build br_frontend_dev
 
+build-fd-dev:
+	$(COMPOSE) build br_frontend_dev
+
+build-bd-dev:
+	$(COMPOSE) build br_backend_dev
+
 build-prod:
 	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 	$(COMPOSE_PROD) build br_backend
