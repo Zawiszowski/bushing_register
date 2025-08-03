@@ -22,7 +22,7 @@ const defaultBushingParemeters = {
   
       mounting_component: -1,
       axle: 'Rear',
-      min_force: 200,
+      min_force: -200,
       max_force: 200,
       shear_modulus: 200
   
@@ -66,7 +66,7 @@ const StiffnesCalculator = () => {
         }
 
     };
-    debugger
+   
   const estimateShearModulus = () => {
     const {shear_modulus, ...rest} = bushingParameters
 
