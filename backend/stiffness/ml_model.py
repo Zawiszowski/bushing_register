@@ -235,8 +235,10 @@ class NeuralNetwork(MLModelService):
         self.model = None
         self.data_service = data_service
         self.data_service.add_force()
-        # Standardizing the data
 
+        # Standardizing the data
+        self.scaler_X = StandardScaler()
+        self.scaler_y = StandardScaler()
 
     def predict_stiffness(self, user_parameters: UserParameters) -> tuple:
         """
@@ -255,7 +257,10 @@ class NeuralNetwork(MLModelService):
         })
         
 
-        predicted_stiffness = self.model.predict(new_input)[0]
+        predicted_stiffness_scaled = self.model.predict(self.scaler_X.transform(new_input))
+        predicted_stiffness_scaled_reshape = predicted_stiffness_scaled.reshape(1, -1)
+        predicted_stiffness = np.rint(self.scaler_y.inverse_transform(predicted_stiffness_scaled_reshape))[0]
+
         forces_min = np.rint(np.linspace(user_parameters.min_force, 0, len(predicted_stiffness)//2))
         forces_max = np.rint(np.linspace(0, user_parameters.max_force, len(predicted_stiffness)//2))
 
@@ -269,11 +274,11 @@ class NeuralNetwork(MLModelService):
         x = pd.DataFrame(self.data_service.x, columns=self.data_service.labels)
         y = pd.DataFrame(self.data_service.y, columns=[f'k_{i}' for i in range(len(self.data_service.y[0]))])
 
-        scaler_X = StandardScaler()
-        scaler_y = StandardScaler()
+        
+        
 
-        x_scaled = scaler_X.fit_transform(x)
-        y_scaled = scaler_y.fit_transform(y)
+        x_scaled = self.scaler_X.fit_transform(x)
+        y_scaled = self.scaler_y.fit_transform(y)
 
         # Train-test split
         X_train, X_test, y_train, y_test = train_test_split(x_scaled, y_scaled, test_size=0.2, random_state=42)
@@ -289,7 +294,7 @@ class NeuralNetwork(MLModelService):
         model.add(Dropout(0.3))
 
         model.add(Dense(units=32, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
-        model.add(Dense(units=y_train.shape[1], activation='linear'))  # Multi-output regression
+        model.add(Dense(units=y_train.shape[1]))  # Multi-output regression
         
         # Compile the model
         model.compile(optimizer='adam', loss='mean_squared_error')

@@ -60,7 +60,7 @@ class CalculateStiffnessMapView(APIView):
             )
         data = DataService()
         data.get_data()
-        model = RandomForest(data)
+        model = NeuralNetwork(data)
         (force, stiffness) = model.predict_stiffness(user_params)
 
         return Response({'data': {'stiffness': stiffness, 'forces': force}}, status=status.HTTP_200_OK)
