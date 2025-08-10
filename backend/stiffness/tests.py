@@ -2,9 +2,10 @@ from django.test import TestCase
 from register.models import BushingRegister, MountingComponentModel, ClientModel, ProjectModel
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
-from stiffness.ml_model import DataService, RandomForest, UserParameters, RegisterParameters
+from stiffness.ml_model import DataService, RandomForest, UserParameters, RegisterParameters, NeuralNetwork
 from sklearn.multioutput import MultiOutputRegressor
 from django.urls import reverse
+import time
 
 User = get_user_model()
 
@@ -102,6 +103,46 @@ class RandomForestTest(BaseRegisterTestSetup):
         should success if values are the same
         """
         self.assertAlmostEqual(209, self.user_param.k_0)
+
+class NeuralNetworkTest(BaseRegisterTestSetup):
+
+    def setUp(self):
+        self.data_service = DataService()
+        self.user_param = UserParameters(self.component.id, 'Front', 3000, 3500, 25, 70, 80, 5*10e6)
+        self.data_service.get_data(self.user_param.mounting_component)
+
+    def test_create_ml_model(self):
+        """
+        Should create model
+        """
+
+        service = NeuralNetwork(self.data_service)
+        service._create_model()
+
+        self.assertTrue(service.model)
+
+    def test_model_efficiency(self):
+        """
+        should success if efficiency mertics are satisfied
+        """ 
+        #should test it or real data 
+        service = NeuralNetwork(self.data_service)
+
+        X_train, X_test, y_train, y_test = service._prepare_training_data()
+
+        start = time.time()
+        service._create_model()
+        end = time.time()
+        _time = end - start
+
+        loss, mae, mse = service.model.evaluate(X_test, y_test)
+
+        # loss: 0.2531 - mae: 0.1639 - mse: 0.0496 - val_loss: 0.3319 - val_mae: 0.2887 - val_mse: 0.1300 - results for 200 epochs
+        self.assertTrue(_time < 20) # should create model uder time fo 20 seconds
+        self.assertTrue(mae < 0.4)
+        self.assertTrue(mse < 0.6)
+
+    
 
 class PredictStiffnessTest(BaseRegisterTestSetup):
 
