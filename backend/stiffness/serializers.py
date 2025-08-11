@@ -12,6 +12,11 @@ class BaseCalculateStiffnessSerializer(serializers.Serializer):
     length = serializers.FloatField()
 
 class CalculateStiffnessSerializer(serializers.Serializer):
+    ESTIMATION_MODEL_TYPE = [
+        ('nonlinear regression', 'nonlinear_regression'),
+        ('neural network', 'neural_network')
+    ]
+
     mounting_component = serializers.IntegerField() 
     axle = serializers.CharField() 
     min_force = serializers.IntegerField()
@@ -20,3 +25,4 @@ class CalculateStiffnessSerializer(serializers.Serializer):
     outer_diameter = serializers.FloatField()
     length = serializers.FloatField()
     shear_modulus = serializers.IntegerField()
+    estimation_model = serializers.ChoiceField(choices=ESTIMATION_MODEL_TYPE) 

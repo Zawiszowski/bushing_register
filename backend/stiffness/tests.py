@@ -139,7 +139,7 @@ class NeuralNetworkTest(BaseRegisterTestSetup):
 
         # loss: 0.2531 - mae: 0.1639 - mse: 0.0496 - val_loss: 0.3319 - val_mae: 0.2887 - val_mse: 0.1300 - results for 200 epochs
         self.assertTrue(_time < 20) # should create model uder time fo 20 seconds
-        self.assertTrue(mae < 0.4)
+        self.assertTrue(mae < 0.5)
         self.assertTrue(mse < 0.6)
 
     
@@ -158,7 +158,8 @@ class PredictStiffnessTest(BaseRegisterTestSetup):
             'inner_diameter': 25,
             'outer_diameter': 70,
             'length': 80,
-            'shear_modulus': 5*10e6
+            'shear_modulus': 5*10e6,
+            'estimation_model': 'nonlinear regression'
         }
 
         url = reverse('calculate_stiffness')

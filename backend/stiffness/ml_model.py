@@ -108,8 +108,6 @@ class RegisterParameters:
 
     
 
-def stiffness_prediction() -> list:
-    pass
 
 class MLModelService(ABC):
 
@@ -270,18 +268,7 @@ class NeuralNetwork(MLModelService):
         """
         Create a Neural Network model to predict stiffness.
         """
-
-        x = pd.DataFrame(self.data_service.x, columns=self.data_service.labels)
-        y = pd.DataFrame(self.data_service.y, columns=[f'k_{i}' for i in range(len(self.data_service.y[0]))])
-
-        
-        
-
-        x_scaled = self.scaler_X.fit_transform(x)
-        y_scaled = self.scaler_y.fit_transform(y)
-
-        # Train-test split
-        X_train, X_test, y_train, y_test = train_test_split(x_scaled, y_scaled, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = self._prepare_training_data()
 
         # Neural Network architecture
         model = Sequential()
@@ -297,13 +284,63 @@ class NeuralNetwork(MLModelService):
         model.add(Dense(units=y_train.shape[1]))  # Multi-output regression
         
         # Compile the model
-        model.compile(optimizer='adam', loss='mean_squared_error')
+        model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae', 'mse'])
 
 
         # Early stopping callback to avoid overfitting
         early_stopping = EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True)
 
         # Train the model
-        model.fit(X_train, y_train, epochs=100, batch_size=32, validation_data=(X_test, y_test), callbacks=[early_stopping])
+        model.fit(X_train, y_train, epochs=200, batch_size=32, validation_data=(X_test, y_test), callbacks=[early_stopping], verbose=0)
 
         self.model = model
+
+    def _prepare_training_data(self):
+        """
+        Prepare standardize data
+        """
+        x = pd.DataFrame(self.data_service.x, columns=self.data_service.labels)
+        y = pd.DataFrame(self.data_service.y, columns=[f'k_{i}' for i in range(len(self.data_service.y[0]))])
+
+        
+        x_scaled = self.scaler_X.fit_transform(x)
+        y_scaled = self.scaler_y.fit_transform(y)
+
+        # Train-test split
+        X_train, X_test, y_train, y_test = train_test_split(x_scaled, y_scaled, test_size=0.2, random_state=42)
+
+        return X_train, X_test, y_train, y_test
+
+
+class StiffnessPredictor:
+
+    def __init__(self, strategy: MLModelService):
+        self.strategy = strategy
+    
+
+    def predict(self, user_params : UserParameters):
+
+        data = DataService()
+        data.get_data()
+        model = self.strategy(data)
+        return model.predict_stiffness(user_params)
+    
+
+class StrategyFactory:
+
+    def __init__(self): 
+        self._registry = {
+            'nonlinear regression': RandomForest,
+            'neural network': NeuralNetwork,
+        }
+        self._cache = []
+
+    def get(self, name) -> MLModelService: 
+        # here to add caching model._create_model to reduce model creation time
+        # to add async training on db event (INSERT/DELET/UPDATE) ? Redis ?
+        # have to move _create_model to MLModelService as abstract
+
+        if name not in self._registry:
+            raise KeyError(f"Unknown strategy: {name}")
+        
+        return self._registry[name]
