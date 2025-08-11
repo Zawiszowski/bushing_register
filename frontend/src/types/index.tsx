@@ -141,4 +141,6 @@ export interface BushingParameters {
     max_force: number,
     shear_modulus: number
 
+    estimation_model: string
+
 }

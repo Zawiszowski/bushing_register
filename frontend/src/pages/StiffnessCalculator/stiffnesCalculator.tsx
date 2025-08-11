@@ -1,8 +1,9 @@
-import { useEffect, useState} from 'react'
-import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatsSection, SectionTitle, FeaturesSection
+import {  useState} from 'react'
+import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatsSection, SectionTitle, FeaturesSection, ProcessSection
  } from '../Home/home.styles';
+
 import axios from 'axios';
-import { SteveDimensions } from './stiffnessCalculator.styles';
+import { SteveDimensions, FloatingDiv } from './stiffnessCalculator.styles';
 import { Input, Button } from 'reactstrap';
 import type { BushingParameters } from '../../types';
 
@@ -13,6 +14,26 @@ import { notify_success, validation_info_error } from '../../utils/basicToasts';
 import { DRF_ADRESS } from '../../data/constants';
 
 import Plot from 'react-plotly.js';
+import type * as Plotly from 'plotly.js';
+
+const force = [-200, -178, -156, -133, -111, -89, -67, -44, -22, 0, 0, 22, 44, 67, 89, 111, 133, 156, 178, 200]
+const stiffness = [602, 514, 444, 394, 319, 271, 267, 259, 280, 272, 305, 235, 255, 289, 312, 323, 387, 463, 523, 598]
+
+const defaultPlot: Partial<Plotly.ScatterData> = {
+  x: force,
+  y: stiffness,
+  type: 'scatter',
+  mode: 'lines+markers',
+
+}
+
+const layout: Partial<Plotly.Layout> = {
+  title: {text: 'Stiffness for 0.5m/s'},
+  paper_bgcolor: 'rgba(0,0,0,0)',   
+  plot_bgcolor: 'rgba(0,0,0,0)',    
+  }
+
+const estimation_model = ['nonlinear regression', 'neural network']
 
 const defaultBushingParemeters = {
 
@@ -24,28 +45,25 @@ const defaultBushingParemeters = {
       axle: 'Rear',
       min_force: -200,
       max_force: 200,
-      shear_modulus: 200
+      shear_modulus: 200,
+
+      estimation_model: estimation_model[0]
   
   
 }
 
-interface PlotType {
-  x: Array<number>,
-  y: Array<number>,
-  type: string,
-  mode: string,
-}
 
 const StiffnesCalculator = () => {
   const {config} = useAuthContext();
   const {mountingComp }= useMountingComponent(config, defaultMountingComp)
   const axle = ['Front','Rear']
-      const mc_name_init = 'other'
+  const mc_name_init = 'other'
+
 
   const mc_id_init = JSON.parse(JSON.stringify(mountingComp[0].id !== -1 && mountingComp.find(item => item.name.toLowerCase() === mc_name_init)?.id ))
-  const [mountingCompId, setMountingCompId] = useState(mc_id_init)
+  const [_, setMountingCompId] = useState(mc_id_init)
   const [bushingParameters, setBushingParemeters] = useState<BushingParameters>(defaultBushingParemeters)
-  const [stiffnessPlot, setStiffnessPlot] = useState<PlotType>()
+  const [stiffnessPlot, setStiffnessPlot] = useState<Partial<Plotly.ScatterData>[]>([defaultPlot])
 
     const handleChange = (e : any) => {
         // if (readOnly) return;
@@ -91,12 +109,12 @@ const StiffnesCalculator = () => {
 
         console.log(res.data.data)
         setStiffnessPlot(
-              {
+             [{
               x: res.data.data.forces,
               y: res.data.data.stiffness,
               type: 'scatter',
               mode: 'lines+markers',
-              })
+              }])
         notify_success('ok')
         
       })
@@ -132,8 +150,8 @@ const StiffnesCalculator = () => {
         <StatsSection >
           <SectionTitle>Bushing Dimensions</SectionTitle>
           
-            <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
-              d: <Input 
+            <FloatingDiv>
+              inner diameter: <Input 
                 style={{width: '100px'}}
                 type="number"
                 name="inner_diameter"
@@ -143,7 +161,7 @@ const StiffnesCalculator = () => {
                 
                 ></Input>
               <SteveDimensions ></SteveDimensions>
-              D: <Input 
+              outer diameter: <Input 
                 style={{width: '100px'}}
                 type="number"
                 name="outer_diameter"
@@ -151,9 +169,9 @@ const StiffnesCalculator = () => {
                 onChange={handleChange}
                 placeholder="outer diameter"
               ></Input>
-            </div>
-            <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
-              H: 
+            </FloatingDiv>
+            <FloatingDiv style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
+              length:  
             <Input 
                 style={{width: '100px'}}
                 type="number"
@@ -163,13 +181,13 @@ const StiffnesCalculator = () => {
                 placeholder="length"
             
             ></Input>
-            </div>
+            </FloatingDiv>
             
 
         </StatsSection>
 
         <FeaturesSection>
-            <SectionTitle>Bushing Info</SectionTitle>
+            <SectionTitle>Bushing Info ⚙️</SectionTitle>
 
             Mounting Component
             <Input               
@@ -227,7 +245,7 @@ const StiffnesCalculator = () => {
         </FeaturesSection>
 
         <FeaturesSection>
-            <SectionTitle>Pass or Estimate Shear Modulus</SectionTitle>
+            <SectionTitle>Pass or 🪄Estimate Shear Modulus</SectionTitle>
             <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
             Shear modulus
             <Input
@@ -242,33 +260,60 @@ const StiffnesCalculator = () => {
 
             <Button
               onClick={estimateShearModulus}
-            >Estimate with Gemini</Button>
+            >🪄 Estimate with AI</Button>
             </div>
 
             
         </FeaturesSection>
+
+        <FeaturesSection>
+            <SectionTitle>Estimation Model 🔍</SectionTitle>
+            <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
+            Model type
+            <Input               
+              type='select'
+              name="estimation_model"
+              value={bushingParameters.estimation_model}
+              onChange={handleChange}
+              placeholder="Choice component"
+              style={{width:'300px', margin: '1rem'}}
+            >
+              {
+                estimation_model.map( (value, index) => (
+                    <option value={value} key={index}>{(value.toUpperCase())}</option>
+                  ) )
+              }
+            </Input>
+
+
+            </div>
+
+            
+        </FeaturesSection>
+
+
+        <ProcessSection >
+
+          <SectionTitle>Dynamic Stiffness Chart</SectionTitle>
+          <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
+          <Plot
+            data={stiffnessPlot}
+            layout={layout}
+            style={{width: '100%', height: '100%'}}
+          ></Plot>
+
+          
+          </div>
+
+         
+        </ProcessSection>
 
         <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
         <Button
           onClick={requestStiffness}
         >Apply and calculate stiffness!</Button>
         </div>
-
-        <StatsSection >
-
-          <SectionTitle>Dynamic Stiffness Chart</SectionTitle>
-          <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
-          <Plot
-            data={[stiffnessPlot]}
-            layout={{
-              title: 'Transparent Background',
-              paper_bgcolor: 'rgba(0,0,0,0)',   
-              plot_bgcolor: 'rgba(0,0,0,0)',    
-            }}
-          ></Plot>
-          </div>
-         
-        </StatsSection>
+        
 
 
       </Container>

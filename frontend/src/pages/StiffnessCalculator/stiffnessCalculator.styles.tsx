@@ -15,3 +15,10 @@ export const SteveDimensions = styled.img.attrs({
   }
 
 `;
+
+export const FloatingDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${float} 3s ease-in-out infinite;
+`;
