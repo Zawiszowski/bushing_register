@@ -8,6 +8,10 @@ import numpy as np
 import pandas as pd
 from enum import Enum
 import math
+from datetime import datetime, UTC
+from threading import Lock
+import threading
+from .repo import RegisterRepo
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
@@ -117,6 +121,11 @@ class MLModelService(ABC):
         Universal method to generate stiffness and force lists
         """
         pass
+    
+    @abstractmethod
+    def fit():
+        pass
+
 
 class RandomForest(MLModelService):
 
@@ -128,7 +137,7 @@ class RandomForest(MLModelService):
         """
         Get learing data and user input to predict stiffness from existing data
         """
-        self._create_model()
+
         
         new_input = pd.DataFrame({
             'mounting_component': [user_parameters.mounting_component],
@@ -144,7 +153,7 @@ class RandomForest(MLModelService):
         
         return (np.concatenate((forces_min, forces_max)), predicted_stiffness)
 
-    def _create_model(self) -> MultiOutputRegressor:
+    def fit(self) -> MultiOutputRegressor:
         """
         Create model base on skikitlear and RandomForest
         """
@@ -242,7 +251,7 @@ class NeuralNetwork(MLModelService):
         """
         Get learning data and user input to predict stiffness from existing data
         """
-        self._create_model()
+
 
         forces = np.concatenate((np.linspace(user_parameters.min_force, 0, 10), np.linspace(0, user_parameters.max_force, 10)))
         new_input = pd.DataFrame({
@@ -264,7 +273,7 @@ class NeuralNetwork(MLModelService):
 
         return (np.concatenate((forces_min, forces_max)), predicted_stiffness)
 
-    def _create_model(self):
+    def fit(self):
         """
         Create a Neural Network model to predict stiffness.
         """
@@ -320,27 +329,108 @@ class StiffnessPredictor:
 
     def predict(self, user_params : UserParameters):
 
-        data = DataService()
-        data.get_data()
-        model = self.strategy(data)
-        return model.predict_stiffness(user_params)
+        # data = DataService()
+        # data.get_data()
+        # model = self.strategy(data)
+        return self.strategy.predict_stiffness(user_params)
     
 
 class StrategyFactory:
+    _instance: StrategyFactory | None = None
+    _singletone_lock = threading.Lock()
+
+    @classmethod
+    def instance(cls) -> StrategyFactory:
+
+        if cls._instance is not None:
+            return cls._instance
+        with cls._singletone_lock:
+            if cls._instance is None:
+                cls._instance = cls()
+        return cls._instance
 
     def __init__(self): 
-        self._registry = {
+
+        if getattr(self, "_initialized", False):
+            return
+        self._initialized = True
+
+        self._registry:dict[str, MLModelService] = {
             'nonlinear regression': RandomForest,
             'neural network': NeuralNetwork,
         }
-        self._cache = []
+        self._cache: dict[str, MLModelService] = {}
+        self._trained_at: dict[str, datetime] = {}
+        self._lock = Lock()
+
+        self._data_service = DataService()
+        self._repo = RegisterRepo()
+
+        self._warmup()
+
+    def _warmup(self):
+        """Optionaly load and initialize strategy on start"""
+        self._data_service = DataService()
+        self._data_service.get_data()
+
+        for name in self._registry:
+            self._ensure_strategy(name)
+
 
     def get(self, name) -> MLModelService: 
         # here to add caching model._create_model to reduce model creation time
-        # to add async training on db event (INSERT/DELET/UPDATE) ? Redis ?
+        # to add async training on db event (INSERT/DELET/UPDATE) ? Redis ? 
         # have to move _create_model to MLModelService as abstract
-
         if name not in self._registry:
             raise KeyError(f"Unknown strategy: {name}")
         
-        return self._registry[name]
+        self._refresh_if_stale(name)
+
+        return self._cache[name]
+
+    def rebuild_all(self):
+        """Manual retrain -> to implement in admin ?"""
+        with self._lock:
+            self._reload_data()
+            for name in list(self._registry.keys()):
+                self._build_strategy(name)
+
+    
+    def _build_strategy(self, name):
+        # self._data_service.get_data()
+        strat_cls = self._registry[name]
+        instance = strat_cls(self._data_service)
+        instance.fit()
+        self._cache[name] = instance
+        self._trained_at[name] = datetime.now(UTC)
+
+    def _ensure_strategy(self, name):
+        if name in self._cache:
+            return
+            
+        self._build_strategy(name)
+    
+    def _reload_data(self):
+        ds = DataService()
+        ds.get_data()
+        self._data_service = ds
+
+
+    def _refresh_if_stale(self, name):
+        self._ensure_strategy(name)
+        last_update = self._repo.max_updated_at()
+        trained_at = self._trained_at.get(name, datetime.min)
+        if not last_update or (trained_at and last_update <= trained_at):
+            return
+        
+        def _retrain():
+            with self._lock():
+
+                current_train = self._trained_at.get(name, datetime.min)
+                if current_train and last_update <= current_train:
+                    return
+
+                self._reload_data()
+                self._build_strategy(name)
+        
+        threading.Thread(target=_retrain, daemon=True).start()

@@ -58,8 +58,8 @@ class CalculateStiffnessMapView(APIView):
             serializer.validated_data['length'],
             serializer.validated_data['shear_modulus'],
             )
-        
-        strategy = StrategyFactory().get(serializer.validated_data['estimation_model'])
+        factory = StrategyFactory.instance()
+        strategy = factory.get(serializer.validated_data['estimation_model'])
         predictor = StiffnessPredictor(strategy)
         (force, stiffness) = predictor.predict(user_params)
 
