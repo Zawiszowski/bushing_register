@@ -587,7 +587,8 @@ const BushingRegister = () => {
 
             Here you will find a comprehensive selection of bushings for car's suspension, designed to enhance your vehicle's performance and comfort. <br/>
             Browse through our list to find the perfect fit for your needs.<br/>
-            This is a complete overview of our bushings, where we track stiffness, location, and condition using photos.
+            This is a complete overview of our bushings, where we track stiffness, location, and condition using photos.<br></br><br></br>
+            To unlock full functionality contact support
 
             </div>
 

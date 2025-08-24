@@ -104,18 +104,27 @@ export const SpanWrapper = styled.div`
 
 `
 export const Span = styled.span`
-    padding: 0.75rem;
-    /* border: 2px, solid #727878; */
-    background-color: rgb(212, 212, 212);
-    border-radius: 15px;
+  padding: 1rem 2.5rem;
+  border: 2px solid rgba(139, 183, 250, 0.3);
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background: rgba(167, 139, 250, 0.1);
+  color:rgb(92, 141, 246);
+  
+  backdrop-filter: blur(10px);
 
     
     cursor:pointer;
 
     &.active {
       padding: 0.75rem;
-      background-color: #727878;
-      color:white;
+      background: rgba(139, 183, 250, 0.3);
+
     }
 
 `

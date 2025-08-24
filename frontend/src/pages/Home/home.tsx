@@ -5,7 +5,7 @@ import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle
     InfoSection, InfoText, InfoTitle
  } from './home.styles';
 
- import { ProjectButtonGroup, ProjectButton } from '../../styles/global.styles';
+ import { ProjectButtonGroup, ProjectButton } from '../../styles/Generic.styles';
 
 
 

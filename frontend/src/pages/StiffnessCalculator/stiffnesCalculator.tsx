@@ -2,11 +2,11 @@ import {  useState} from 'react'
 import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatsSection, SectionTitle, FeaturesSection, FeaturesGrid, FeatureDescription, ProcessSection
  } from '../Home/home.styles';
 
-import { ProjectButton } from '../../styles/global.styles';
+import { ProjectButton } from '../../styles/Generic.styles';
 
 import axios from 'axios';
 import { SteveDimensions, FloatingDiv, FeatureCard } from './stiffnessCalculator.styles';
-import { Input, Button } from 'reactstrap';
+import { Input } from 'reactstrap';
 import type { BushingParameters } from '../../types';
 
 import { useMountingComponent } from '../../hooks/useMountingList';
