@@ -1,9 +1,11 @@
 import {  useState} from 'react'
-import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatsSection, SectionTitle, FeaturesSection, ProcessSection
+import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatsSection, SectionTitle, FeaturesSection, FeaturesGrid, FeatureDescription, ProcessSection
  } from '../Home/home.styles';
 
+import { ProjectButton } from '../../styles/global.styles';
+
 import axios from 'axios';
-import { SteveDimensions, FloatingDiv } from './stiffnessCalculator.styles';
+import { SteveDimensions, FloatingDiv, FeatureCard } from './stiffnessCalculator.styles';
 import { Input, Button } from 'reactstrap';
 import type { BushingParameters } from '../../types';
 
@@ -143,7 +145,7 @@ const StiffnesCalculator = () => {
           </HeroSubtitle>
 
                     <HeroSubtitle>
-                comming soon ...
+                carefully fill in all fields and proceed with calculations :)
           </HeroSubtitle>
         </HeroSection>
 
@@ -242,10 +244,10 @@ const StiffnesCalculator = () => {
             ></Input>
             </div>
 
-        </FeaturesSection>
-
-        <FeaturesSection>
-            <SectionTitle>Pass or 🪄Estimate Shear Modulus</SectionTitle>
+        
+        <FeaturesGrid>
+        <FeatureCard>
+            <SectionTitle>🪄Estimate Shear Modulus</SectionTitle>
             <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
             Shear modulus
             <Input
@@ -258,16 +260,18 @@ const StiffnesCalculator = () => {
 
             ></Input>
 
-            <Button
+            <ProjectButton
+              className='secondary'
               onClick={estimateShearModulus}
-            >🪄 Estimate with AI</Button>
+            >🪄 Estimate with AI</ProjectButton>
             </div>
 
             
-        </FeaturesSection>
+        </FeatureCard>
 
-        <FeaturesSection>
+        <FeatureCard>
             <SectionTitle>Estimation Model 🔍</SectionTitle>
+
             <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
             Model type
             <Input               
@@ -289,10 +293,19 @@ const StiffnesCalculator = () => {
             </div>
 
             
+        </FeatureCard>
+        </FeaturesGrid>
         </FeaturesSection>
 
+        
+        <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
+        <ProjectButton
+          className='primary'
+          onClick={requestStiffness}
+        >Apply and calculate stiffness!</ProjectButton>
+        </div>
 
-        <ProcessSection >
+        <ProcessSection style={{marginBlock: '3rem'}}>
 
           <SectionTitle>Dynamic Stiffness Chart</SectionTitle>
           <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
@@ -308,11 +321,14 @@ const StiffnesCalculator = () => {
          
         </ProcessSection>
 
-        <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
-        <Button
-          onClick={requestStiffness}
-        >Apply and calculate stiffness!</Button>
-        </div>
+        <FeaturesSection>
+            <SectionTitle>Report Generator</SectionTitle>
+              <FeatureCard>
+                Our upcoming Report Generator will allow you to estimate stiffness and generate detailed analysis reports with just a few clicks. This feature is currently under development and will be available exclusively with a subscription. Stay tuned!
+              </FeatureCard>
+        </FeaturesSection>
+
+
         
 
 

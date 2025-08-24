@@ -1,9 +1,11 @@
 
-import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, ButtonGroup, Button, StatCard, StatLabel, StatNumber,
+import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatCard, StatLabel, StatNumber,
     StatsGrid, StatsSection, SectionTitle, FeatureCard, FeatureDescription, FeatureIcon, FeatureTitle, FeaturesGrid, FeaturesSection,
     ProcessSection, ProcessStep, ProcessSteps, StepNumber, StepTitle, StepDescription, InfoCard, InfoGrid, InfoIcon, InfoList, InfoListItem,
     InfoSection, InfoText, InfoTitle
  } from './home.styles';
+
+ import { ProjectButtonGroup, ProjectButton } from '../../styles/global.styles';
 
 
 
@@ -74,10 +76,10 @@ const Home = () => {
             The most advanced bushing management platform for engineering professionals. 
             Streamline your inventory, optimize maintenance schedules, and ensure precision in every project.
           </HeroSubtitle>
-          <ButtonGroup>
-            <Button className="primary">Start Free Trial</Button>
-            <Button className="secondary">Watch Demo</Button>
-          </ButtonGroup>
+          <ProjectButtonGroup>
+            <ProjectButton className="primary">Start Free Trial</ProjectButton>
+            <ProjectButton className="secondary">Watch Demo</ProjectButton>
+          </ProjectButtonGroup>
         </HeroSection>
 
         <StatsSection>
