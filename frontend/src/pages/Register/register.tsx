@@ -246,7 +246,7 @@ const BushingRegister = () => {
         <WrapperContainer
         hasPhotos={item?.photo_links?.length > 0 ? true: false}
         key={item.id}
-        className='row'
+        // className='row'
         // style={{...WrapperContainer, backgroundColor: item.photo_links.length > 0 ? 'rgb(231, 196, 196)' : 'rgb(233, 231, 231)'}}
         ref={ref}
         >

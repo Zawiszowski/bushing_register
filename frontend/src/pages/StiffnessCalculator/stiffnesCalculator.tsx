@@ -1,11 +1,11 @@
 import {  useState} from 'react'
-import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, StatsSection, SectionTitle, FeaturesSection, FeaturesGrid, FeatureDescription, ProcessSection
+import { Container, BackgroundElements, FloatingShape, HeroSection, HeroSubtitle, HeroTitle, SectionTitle, FeaturesSection, FeaturesGrid, ProcessSection
  } from '../Home/home.styles';
 
 import { ProjectButton } from '../../styles/Generic.styles';
 
 import axios from 'axios';
-import { SteveDimensions, FloatingDiv, FeatureCard } from './stiffnessCalculator.styles';
+import { SteveDimensions, FloatingDiv, FeatureCard, StatsSection, FlexCenterDiv } from './stiffnessCalculator.styles';
 import { Input } from 'reactstrap';
 import type { BushingParameters } from '../../types';
 
@@ -154,7 +154,7 @@ const StiffnesCalculator = () => {
           
             <FloatingDiv>
               inner diameter: <Input 
-                style={{width: '100px'}}
+                style={{width: '60px'}}
                 type="number"
                 name="inner_diameter"
                 value={bushingParameters.inner_diameter}
@@ -164,7 +164,7 @@ const StiffnesCalculator = () => {
                 ></Input>
               <SteveDimensions ></SteveDimensions>
               outer diameter: <Input 
-                style={{width: '100px'}}
+                style={{width: '60px'}}
                 type="number"
                 name="outer_diameter"
                 value={bushingParameters.outer_diameter}
@@ -175,7 +175,7 @@ const StiffnesCalculator = () => {
             <FloatingDiv style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
               length:  
             <Input 
-                style={{width: '100px'}}
+                style={{width: '60px'}}
                 type="number"
                 name="length"
                 value={bushingParameters.length}
@@ -248,7 +248,7 @@ const StiffnesCalculator = () => {
         <FeaturesGrid>
         <FeatureCard>
             <SectionTitle>🪄Estimate Shear Modulus</SectionTitle>
-            <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
+            <FlexCenterDiv>
             Shear modulus
             <Input
               type="number"
@@ -264,7 +264,7 @@ const StiffnesCalculator = () => {
               className='secondary'
               onClick={estimateShearModulus}
             >🪄 Estimate with AI</ProjectButton>
-            </div>
+            </FlexCenterDiv>
 
             
         </FeatureCard>
@@ -272,7 +272,7 @@ const StiffnesCalculator = () => {
         <FeatureCard>
             <SectionTitle>Estimation Model 🔍</SectionTitle>
 
-            <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
+            <FlexCenterDiv>
             Model type
             <Input               
               type='select'
@@ -290,7 +290,7 @@ const StiffnesCalculator = () => {
             </Input>
 
 
-            </div>
+            </FlexCenterDiv>
 
             
         </FeatureCard>
@@ -313,6 +313,7 @@ const StiffnesCalculator = () => {
             data={stiffnessPlot}
             layout={layout}
             style={{width: '100%', height: '100%'}}
+            config={{ responsive: true}}
           ></Plot>
 
           

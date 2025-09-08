@@ -98,7 +98,7 @@ export const SpanWrapper = styled.div`
   display: flex;
   flex-direction: row;
 
-  @media screen and (max-width: 470px) {
+  @media screen and (max-width: 824px) {
     flex-direction: column;
   }
 
@@ -118,7 +118,6 @@ export const Span = styled.span`
   
   backdrop-filter: blur(10px);
 
-    
     cursor:pointer;
 
     &.active {
@@ -141,19 +140,23 @@ export const InnerContainer = styled.div`
 
 export const WrapperContainer = styled.div<{hasPhotos : boolean}>`
 
-margin: 0.5rem;
-padding: 0.5rem;
-/* background-color: rgb(233, 231, 231); */
-/* background-color: rgb(231, 196, 196); */
-/* border-bottom: 1px solid black; */
-background-color: ${({ hasPhotos }) => (hasPhotos ? 'rgb(195, 210, 231)' : 'rgb(240, 211, 211)')}; 
-border-radius: 0.5rem;
-
-&:hover{
+  margin: 0.5rem;
+  padding: 0.5rem;
+  /* background-color: rgb(233, 231, 231); */
+  /* background-color: rgb(231, 196, 196); */
+  /* border-bottom: 1px solid black; */
+  background-color: ${({ hasPhotos }) => (hasPhotos ? 'rgb(195, 210, 231)' : 'rgb(240, 211, 211)')}; 
   border-radius: 0.5rem;
-  transition: background-color 0.5s ease-in-out;
-  background-color: rgb(255, 255, 255);
-}
+  @media screen and (max-width: 824px) {
+    display: "flex";
+    flex-direction: column;
+  }
+
+  &:hover{
+    border-radius: 0.5rem;
+    transition: background-color 0.5s ease-in-out;
+    background-color: rgb(255, 255, 255);
+  }
 
 `
 
